@@ -103,4 +103,8 @@ crashlytics-build.properties
 # OS generated files #
 #######################################
 .DS_Store
+<<<<<<< HEAD
 Thumbs.db
+=======
+
+
