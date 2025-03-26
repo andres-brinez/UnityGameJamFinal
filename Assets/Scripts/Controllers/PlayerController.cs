@@ -6,6 +6,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float runSpeed = 10f;
     [SerializeField] private float jumpForce = 5f;
     [SerializeField] private float rotationSpeed = 40f; 
+    [SerializeField] private float speed ; // Velocidad del personaje (walkSpeed o runSpeed)
     private Rigidbody rb;
     public bool isGrounded = true;
     private bool jumpInput = false;
@@ -39,7 +40,15 @@ public class PlayerController : MonoBehaviour
         float moveZ = Input.GetAxis("Vertical");
 
         Vector3 movement = new Vector3(0, 0, moveZ).normalized; // Solo movimiento adelante/atrás
-        float speed = Input.GetKey(KeyCode.LeftShift) ? runSpeed : walkSpeed;
+
+        if(Input.GetKey(KeyCode.LeftShift)){
+            Debug.Log("Corriendo");
+            speed = runSpeed;
+            
+        }else{
+            speed = walkSpeed;
+        }
+        //speed = Input.GetKey(KeyCode.LeftShift) ? runSpeed : walkSpeed; // Si se presiona la tecla Shift, la velocidad es runSpeed, de lo contrario, es walkSpeed
 
         Vector3 velocity = transform.forward * moveZ * speed * Time.fixedDeltaTime;
         rb.MovePosition(rb.position + velocity);
