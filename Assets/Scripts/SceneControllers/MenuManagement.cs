@@ -2,12 +2,29 @@ using UnityEngine;
 
 public class MenuManagement : MonoBehaviour
 {
+    public GameObject panelStartDesactivate;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         AudioManager.Instance.PlayMusic("Chunky_Monkey");  
     }
 
+    private void Update()
+    {
+        // Verifica si hay alguna tecla presionada y que no sea un click del mouse
+        if (Input.anyKeyDown && !IsMouseInput())
+        {
+            panelStartDesactivate.SetActive(false);
+            enabled = false;
+        }
+    }
+    private bool IsMouseInput()
+    {
+        return Input.GetMouseButtonDown(0) ||
+               Input.GetMouseButtonDown(1) ||
+               Input.GetMouseButtonDown(2);
+    }
     public void clicSound()
     {
         AudioManager.Instance.PlayFX("start");
