@@ -1,27 +1,40 @@
 using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
 
 public class FollowPlayer : MonoBehaviour
 {
-    public Transform playerTransform;
-    public Vector3 offset;
-    public float smoothSpeed = 0.125f;
+    [SerializeField] private Transform followTarget;
+    [SerializeField] private float rotationSpeed = 30f;
+    [SerializeField] private float TopClamp = 70f;
+    [SerializeField] private float BottomClamp = -40f;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    float cinemachineTargetYaw;
+    float cinemachineTargetPitch;
+    private void LateUpdate()
     {
-        playerTransform = GameObject.FindWithTag("Player").transform;        
-        //offset = transform.position - playerTransform.position;
-        offset = new Vector3(0.8f, 0.24f, -0.7f);
-        
+        CameraLogic();
     }
-
- 
-    void LateUpdate()
+    private void CameraLogic()
     {
-        Vector3 desiredPosition = playerTransform.position + playerTransform.TransformDirection(offset);
-        transform.position = desiredPosition;
+        float mouseX = GetMouseInput("Mouse X");
+        float mouseY = GetMouseInput("Mouse Y");
 
-        transform.rotation = playerTransform.rotation;
-
+        cinemachineTargetPitch = UpdateRotation(cinemachineTargetPitch, mouseY, BottomClamp, TopClamp, true);
+        cinemachineTargetYaw = UpdateRotation(cinemachineTargetYaw, mouseX, float.MinValue, float.MaxValue, false);
+        ApplyRotations(cinemachineTargetPitch, cinemachineTargetYaw);
+    }
+    void ApplyRotations(float pitch, float yaw)
+    {
+        followTarget.rotation = Quaternion.Euler(pitch, yaw, followTarget.eulerAngles.z);
+    }
+    private float UpdateRotation(float currentRot, float input, float min, float max, bool isXAxis)
+    {
+        currentRot += isXAxis ? -input : input;
+        return Mathf.Clamp(currentRot, min, max);
+    }
+    private float GetMouseInput(string axis)
+    {
+        return Input.GetAxis(axis) * rotationSpeed * Time.deltaTime;
     }
 }
