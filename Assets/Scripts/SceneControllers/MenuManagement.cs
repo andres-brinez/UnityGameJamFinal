@@ -7,7 +7,7 @@ public class MenuManagement : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        AudioManager.Instance.PlayMusic("Chunky_Monkey");  
+        AudioManager.Instance.PlayMusic("Screenmenu");  
     }
 
     private void Update()
