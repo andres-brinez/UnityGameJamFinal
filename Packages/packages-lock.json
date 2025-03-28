@@ -1,5 +1,39 @@
 {
   "dependencies": {
+    "com.parallel-cascades.bind-gradient-to-texture": {
+      "version": "file:com.parallel-cascades.bind-gradient-to-texture",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.parallel-cascades.procedural-shaders": "1.0.0"
+      }
+    },
+    "com.parallel-cascades.common-utilities": {
+      "version": "file:com.parallel-cascades.common-utilities",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {}
+    },
+    "com.parallel-cascades.procedural-celestial-body-materials": {
+      "version": "file:com.parallel-cascades.procedural-celestial-body-materials",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.unity.shadergraph": "17.0.3",
+        "com.unity.render-pipelines.universal": "17.0.3",
+        "com.parallel-cascades.common-utilities": "1.0.0",
+        "com.parallel-cascades.procedural-shaders": "1.0.0",
+        "com.parallel-cascades.bind-gradient-to-texture": "1.0.0"
+      }
+    },
+    "com.parallel-cascades.procedural-shaders": {
+      "version": "file:com.parallel-cascades.procedural-shaders",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.unity.shadergraph": "17.0.3"
+      }
+    },
     "com.unity.2d.animation": {
       "version": "10.1.4",
       "depth": 1,
