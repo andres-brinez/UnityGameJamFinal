@@ -50,6 +50,12 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float chargeSpeed = 1f;
     [SerializeField] private float minThrowReleaseTime = 0.15f;
 
+    [Header("Idle Animation Settings")]
+    [SerializeField] private float idleTimeout = 5f; // Tiempo para activar idle 2
+    [SerializeField] private string idle2AnimationTrigger = "Idle2";
+    private float idleTimer = 0f;
+    private bool isInIdle2 = false;
+
     private Rigidbody rb;
     private CapsuleCollider playerCollider;
     private Animator animator;
@@ -116,6 +122,7 @@ public class PlayerController : MonoBehaviour
         HandleAiming();
         HandleChargedThrow();
         UpdateAnimations();
+        HandleIdleAnimation();
 
         if (isAiming)
         {
@@ -164,7 +171,33 @@ public class PlayerController : MonoBehaviour
             cameraHorizontalRotation = transform.eulerAngles.y;
         }
     }
+    void HandleIdleAnimation()
+    {
+        // Verificar si el personaje está quieto (sin movimiento ni rotación)
+        bool isIdle = Mathf.Abs(currentSpeed) < 0.1f &&
+                     Mathf.Abs(currentRotation) < 0.1f &&
+                     !isAiming &&
+                     !isCrouching &&
+                     isGrounded;
 
+        if (isIdle)
+        {
+            idleTimer += Time.deltaTime;
+
+            // Activar idle2 después del timeout
+            if (idleTimer >= idleTimeout && !isInIdle2)
+            {
+                animator.SetTrigger(idle2AnimationTrigger);
+                isInIdle2 = true;
+            }
+        }
+        else
+        {
+            // Resetear el temporizador si hay movimiento
+            idleTimer = 0f;
+            isInIdle2 = false;
+        }
+    }
     void HandleCameraRotation()
     {
         if (Mathf.Abs(Input.GetAxis("Horizontal")) < 0.1f || isAiming)
@@ -442,11 +475,13 @@ public class PlayerController : MonoBehaviour
         {
             animator.SetBool("TurningRight", true);
             animator.SetBool("TurningLeft", false);
+            ResetIdleState();
         }
         else if (currentRotation < -0.1f)
         {
             animator.SetBool("TurningLeft", true);
             animator.SetBool("TurningRight", false);
+            ResetIdleState();
         }
         else
         {
@@ -454,8 +489,17 @@ public class PlayerController : MonoBehaviour
             animator.SetBool("TurningLeft", false);
         }
     }
+    void ResetIdleState()
+    {
+        idleTimer = 0f;
+        if (isInIdle2)
+        {
+            animator.ResetTrigger(idle2AnimationTrigger);
+            isInIdle2 = false;
+        }
+    }
 
-    void OnCollisionEnter(Collision collision)
+        void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Ground"))
         {
