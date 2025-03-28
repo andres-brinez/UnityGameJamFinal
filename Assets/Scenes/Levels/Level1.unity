@@ -1966,10 +1966,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Damping: {x: 0, y: 0, z: 1.5}
-  ShoulderOffset: {x: 0.33, y: -0.46, z: 0.32}
+  ShoulderOffset: {x: 0.3300002, y: -0.46, z: 0.32}
   VerticalArmLength: 0.4
   CameraSide: 1
-  CameraDistance: 3.66
+  CameraDistance: 3.659999
   CameraCollisionFilter:
     serializedVersion: 2
     m_Bits: 0
@@ -5093,6 +5093,10 @@ PrefabInstance:
       value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 5148794529360772509, guid: f0582195422fc6a45a93c28d43bb0850, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5148794529360772509, guid: f0582195422fc6a45a93c28d43bb0850, type: 3}
       propertyPath: m_TagString
       value: Player
       objectReference: {fileID: 0}
@@ -5275,10 +5279,13 @@ PrefabInstance:
       addedObject: {fileID: 5325082589256206157}
     - targetCorrespondingSourceObject: {fileID: 5148794529360772509, guid: f0582195422fc6a45a93c28d43bb0850, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 5325082589256206158}
+      addedObject: {fileID: 5325082589256206161}
     - targetCorrespondingSourceObject: {fileID: 5148794529360772509, guid: f0582195422fc6a45a93c28d43bb0850, type: 3}
       insertIndex: -1
       addedObject: {fileID: 5325082589256206160}
+    - targetCorrespondingSourceObject: {fileID: 5148794529360772509, guid: f0582195422fc6a45a93c28d43bb0850, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5325082589256206158}
   m_SourcePrefab: {fileID: 100100000, guid: f0582195422fc6a45a93c28d43bb0850, type: 3}
 --- !u!95 &1462968523016259464 stripped
 Animator:
@@ -5345,30 +5352,13 @@ MonoBehaviour:
   crouchCenter: {x: 0, y: 0.25, z: 0}
   standingCenter: {x: 0, y: 0.9, z: 0}
   crouchTransitionSpeed: 5
-  projectilePrefab: {fileID: 5232365571606420382, guid: eda45e6594109b140973857498652cd1, type: 3}
-  throwPoint: {fileID: 222590295}
-  baseThrowForce: 10
-  trajectoryLine: {fileID: 5325082589256206158}
-  minThrowAngle: 5
-  maxThrowAngle: 85
-  minThrowDistance: 2
-  maxThrowDistance: 43.48
-  aimSensitivity: 1
-  trajectoryUpdateInterval: 0.1
-  aimDirectionReference: {fileID: 1328973423}
-  referenceDistance: 2
   cameraRotationSpeed: 2
   cameraMaxYAngle: 80
   cameraMinYAngle: -80
-  aimDistanceChangeSpeed: 5
-  cameraZoomController: {fileID: 5325082589256206160}
-  maxChargeTime: 1.5
-  maxChargeMultiplier: 2
-  chargeSpeed: 1
-  minThrowReleaseTime: 0
   idleTimeout: 5
   idle2AnimationTrigger: Idle2
   isGrounded: 1
+  currentSpeed: 0
 --- !u!120 &5325082589256206158
 LineRenderer:
   serializedVersion: 2
@@ -5494,6 +5484,36 @@ MonoBehaviour:
   zoomSpeed: 5.37
   normalShoulderOffset: 0.33
   aimShoulderOffset: 0.68
+--- !u!114 &5325082589256206161
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5325082589256206152}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15b9f3c562860eb4e9c927121785f233, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  projectilePrefab: {fileID: 5232365571606420382, guid: eda45e6594109b140973857498652cd1, type: 3}
+  throwPoint: {fileID: 222590295}
+  baseThrowForce: 10
+  trajectoryLine: {fileID: 5325082589256206158}
+  minThrowAngle: 5
+  maxThrowAngle: 85
+  minThrowDistance: 2
+  maxThrowDistance: 20
+  aimSensitivity: 1
+  trajectoryUpdateInterval: 0.1
+  aimDirectionReference: {fileID: 1328973423}
+  referenceDistance: 2
+  cameraZoomController: {fileID: 5325082589256206160}
+  aimDistanceChangeSpeed: 5
+  maxChargeTime: 1.5
+  maxChargeMultiplier: 2
+  chargeSpeed: 1
+  minThrowReleaseTime: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
