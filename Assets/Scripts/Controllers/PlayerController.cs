@@ -22,6 +22,10 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float cameraMaxYAngle = 80f;
     [SerializeField] private float cameraMinYAngle = -80f;
 
+    [Header("Ground Check Settings")]
+    [SerializeField] private float groundCheckDistance = 0.2f;
+    [SerializeField] private LayerMask groundLayer;
+
     [Header("Idle Animation Settings")]
     [SerializeField] private float idleTimeout = 5f;
     [SerializeField] private string idle2AnimationTrigger = "Idle2";
@@ -32,7 +36,7 @@ public class PlayerController : MonoBehaviour
     private Camera mainCamera;
     private PlayerAimThrow aimThrowController;
 
-    public bool isGrounded = true;
+    public bool isGrounded = false;
     private bool jumpInput = false;
     private bool isCrouching = false;
     public float currentSpeed;
@@ -69,6 +73,7 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        CheckGroundStatus();
         jumpInput = Input.GetKeyDown(KeyCode.Space);
         HandleCrouch();
         HandleRotation();
@@ -84,6 +89,19 @@ public class PlayerController : MonoBehaviour
     {
         Move();
         Jump();
+    }
+
+    void CheckGroundStatus()
+    {
+        // Calcula el punto más bajo del collider
+        float bottomOfCollider = playerCollider.bounds.min.y;
+        Vector3 rayStart = new Vector3(transform.position.x, bottomOfCollider + playerCollider.radius, transform.position.z);
+
+        // Dispara un raycast hacia abajo
+        isGrounded = Physics.Raycast(rayStart, Vector3.down, groundCheckDistance, groundLayer);
+
+        // Opcional: Dibuja el raycast en el editor para debug
+        Debug.DrawRay(rayStart, Vector3.down * groundCheckDistance, isGrounded ? Color.green : Color.red);
     }
 
     void Move()
@@ -258,22 +276,6 @@ public class PlayerController : MonoBehaviour
         {
             animator.ResetTrigger(idle2AnimationTrigger);
             isInIdle2 = false;
-        }
-    }
-
-    void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject.CompareTag("Ground"))
-        {
-            isGrounded = true;
-        }
-    }
-
-    void OnCollisionExit(Collision collision)
-    {
-        if (collision.gameObject.CompareTag("Ground"))
-        {
-            isGrounded = false;
         }
     }
 }

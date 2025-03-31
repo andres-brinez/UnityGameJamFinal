@@ -4,6 +4,7 @@ using UnityEngine.SceneManagement;
 using TMPro;
 using System.Linq;
 using System.Collections.Generic;
+using UnityEngine.Rendering;
 
 public class OptionMenu : MonoBehaviour
 {
@@ -20,6 +21,7 @@ public class OptionMenu : MonoBehaviour
     private float previousVolume;
     private Resolution[] resolutions;
     private bool isInitializing = true;
+    public Animator animatorUI;
 
     void Awake()
     {
@@ -194,6 +196,24 @@ public class OptionMenu : MonoBehaviour
     }
     #endregion
 
+    public void AnimAudioUI()
+    {
+        animatorUI.SetTrigger("AudioEntry");
+    }
+    public void AnimControllsUI()
+    {
+        animatorUI.SetTrigger("ControllsEntry");
+    }
+    public void AnimDisplayUI()
+    {
+        animatorUI.SetTrigger("DisplayEntry");
+    }
+
+    public void BackToMenu()
+    {
+
+        SceneManager.LoadScene("MainMenu");
+    }
     public void clicSound()
     {
         AudioManager.Instance?.PlayFX("start");
