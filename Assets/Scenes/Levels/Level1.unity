@@ -7910,11 +7910,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2380347347647168891, guid: b957c702003ce354eb899fd1578bfef2, type: 3}
       propertyPath: CameraDistance
-      value: 3.659999
+      value: 3.657528
       objectReference: {fileID: 0}
     - target: {fileID: 2380347347647168891, guid: b957c702003ce354eb899fd1578bfef2, type: 3}
       propertyPath: ShoulderOffset.x
-      value: 0.3300002
+      value: 0.330541
       objectReference: {fileID: 0}
     - target: {fileID: 2701920353176967664, guid: b957c702003ce354eb899fd1578bfef2, type: 3}
       propertyPath: m_IsActive
