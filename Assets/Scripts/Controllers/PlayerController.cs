@@ -1,6 +1,4 @@
 using UnityEngine;
-using System.Collections.Generic;
-using Cinemachine;
 
 public class PlayerController : MonoBehaviour
 {
@@ -19,65 +17,36 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Vector3 standingCenter = new Vector3(0, 0.9f, 0);
     [SerializeField] private float crouchTransitionSpeed = 5f;
 
-    [Header("Throwing Settings")]
-    [SerializeField] private GameObject projectilePrefab;
-    [SerializeField] private Transform throwPoint;
-    [SerializeField] private float baseThrowForce = 10f;
-    [SerializeField] private LineRenderer trajectoryLine;
-
-    [Header("Dynamic Aim Settings")]
-    [SerializeField] private float minThrowAngle = 5f;
-    [SerializeField] private float maxThrowAngle = 85f;
-    [SerializeField] private float minThrowDistance = 2f;
-    [SerializeField] private float maxThrowDistance = 20f;
-    [SerializeField] private float aimSensitivity = 1f;
-    [SerializeField] private float trajectoryUpdateInterval = 0.1f;
-
-    [Header("Aim Reference Settings")]
-    [SerializeField] private GameObject aimDirectionReference;
-    [SerializeField] private float referenceDistance = 2f;
-
     [Header("Camera Settings")]
     [SerializeField] private float cameraRotationSpeed = 2f;
     [SerializeField] private float cameraMaxYAngle = 80f;
     [SerializeField] private float cameraMinYAngle = -80f;
-    [SerializeField] private float aimDistanceChangeSpeed = 5f;
-    [SerializeField] private CameraZoomController cameraZoomController;
 
-    [Header("Charged Throw Settings")]
-    [SerializeField] private float maxChargeTime = 1.5f;
-    [SerializeField] private float maxChargeMultiplier = 2f;
-    [SerializeField] private float chargeSpeed = 1f;
-    [SerializeField] private float minThrowReleaseTime = 0.15f;
+    [Header("Ground Check Settings")]
+    [SerializeField] private float groundCheckDistance = 0.2f;
+    [SerializeField] private LayerMask groundLayer;
 
     [Header("Idle Animation Settings")]
-    [SerializeField] private float idleTimeout = 5f; // Tiempo para activar idle 2
+    [SerializeField] private float idleTimeout = 5f;
     [SerializeField] private string idle2AnimationTrigger = "Idle2";
-    private float idleTimer = 0f;
-    private bool isInIdle2 = false;
 
     private Rigidbody rb;
     private CapsuleCollider playerCollider;
     private Animator animator;
     private Camera mainCamera;
+    private PlayerAimThrow aimThrowController;
 
-    public bool isGrounded = true;
+    public bool isGrounded = false;
     private bool jumpInput = false;
     private bool isCrouching = false;
-    private bool isAiming = false;
-    private bool isCharging = false;
-
-    private float currentSpeed;
+    public float currentSpeed;
     private float currentRotation;
     private float targetHeight;
     private Vector3 targetCenter;
-    private float currentThrowAngle = 45f;
-    private float currentThrowDistance = 10f;
     private float cameraHorizontalRotation = 0f;
     private float cameraVerticalRotation = 0f;
-    private float currentCharge = 0f;
-    private float currentThrowForce;
-    private float mouseDownTime;
+    private float idleTimer = 0f;
+    private bool isInIdle2 = false;
     private string powerUpName = "PowerUp1"; // Nombre del powerup (un solo tipo)
 
 
@@ -87,50 +56,32 @@ public class PlayerController : MonoBehaviour
         animator = GetComponent<Animator>();
         playerCollider = GetComponent<CapsuleCollider>();
         mainCamera = Camera.main;
+        aimThrowController = GetComponent<PlayerAimThrow>();
 
         if (rb == null) Debug.LogError("El Rigidbody no está asignado.");
         if (animator == null) Debug.LogError("El Animator no está asignado.");
         if (playerCollider == null) Debug.LogError("El CapsuleCollider no está asignado.");
-        if (trajectoryLine == null) Debug.LogError("LineRenderer no está asignado.");
 
         rb.freezeRotation = true;
         targetHeight = standingHeight;
         targetCenter = standingCenter;
-        trajectoryLine.enabled = false;
-
-        currentThrowAngle = Mathf.Lerp(minThrowAngle, maxThrowAngle, 0.5f);
-        currentThrowDistance = Mathf.Lerp(minThrowDistance, maxThrowDistance, 0.5f);
-        currentThrowForce = baseThrowForce;
 
         cameraHorizontalRotation = transform.eulerAngles.y;
         if (mainCamera != null)
         {
             cameraVerticalRotation = mainCamera.transform.eulerAngles.x;
         }
-
-        if (aimDirectionReference == null)
-        {
-            aimDirectionReference = new GameObject("Aim Direction Reference");
-            aimDirectionReference.transform.SetParent(transform);
-        }
     }
 
     void Update()
     {
+        CheckGroundStatus();
         jumpInput = Input.GetKeyDown(KeyCode.Space);
         HandleCrouch();
         HandleRotation();
         HandleCameraRotation();
-        HandleAiming();
-        HandleChargedThrow();
         UpdateAnimations();
         HandleIdleAnimation();
-
-        if (isAiming)
-        {
-            UpdateAimDirectionReference();
-            UpdateTrajectory();
-        }
 
         playerCollider.height = Mathf.Lerp(playerCollider.height, targetHeight, crouchTransitionSpeed * Time.deltaTime);
         playerCollider.center = Vector3.Lerp(playerCollider.center, targetCenter, crouchTransitionSpeed * Time.deltaTime);
@@ -147,14 +98,17 @@ public class PlayerController : MonoBehaviour
         Jump();
     }
 
-    void UpdateAimDirectionReference()
+    void CheckGroundStatus()
     {
-        if (mainCamera != null && aimDirectionReference != null)
-        {
-            Vector3 targetPosition = mainCamera.transform.position + mainCamera.transform.forward * referenceDistance;
-            aimDirectionReference.transform.position = targetPosition;
-            aimDirectionReference.transform.rotation = Quaternion.LookRotation(mainCamera.transform.forward);
-        }
+        // Calcula el punto más bajo del collider
+        float bottomOfCollider = playerCollider.bounds.min.y;
+        Vector3 rayStart = new Vector3(transform.position.x, bottomOfCollider + playerCollider.radius, transform.position.z);
+
+        // Dispara un raycast hacia abajo
+        isGrounded = Physics.Raycast(rayStart, Vector3.down, groundCheckDistance, groundLayer);
+
+        // Opcional: Dibuja el raycast en el editor para debug
+        Debug.DrawRay(rayStart, Vector3.down * groundCheckDistance, isGrounded ? Color.green : Color.red);
     }
 
     void Move()
@@ -170,7 +124,7 @@ public class PlayerController : MonoBehaviour
 
     void HandleRotation()
     {
-        if (!isAiming)
+        if (!aimThrowController || !aimThrowController.IsAiming)
         {
             float rotation = Input.GetAxis("Horizontal");
             currentRotation = rotation;
@@ -178,12 +132,12 @@ public class PlayerController : MonoBehaviour
             cameraHorizontalRotation = transform.eulerAngles.y;
         }
     }
+
     void HandleIdleAnimation()
     {
-        // Verificar si el personaje está quieto (sin movimiento ni rotación)
         bool isIdle = Mathf.Abs(currentSpeed) < 0.1f &&
                      Mathf.Abs(currentRotation) < 0.1f &&
-                     !isAiming &&
+                     (!aimThrowController || !aimThrowController.IsAiming) &&
                      !isCrouching &&
                      isGrounded;
 
@@ -191,7 +145,6 @@ public class PlayerController : MonoBehaviour
         {
             idleTimer += Time.deltaTime;
 
-            // Activar idle2 después del timeout
             if (idleTimer >= idleTimeout && !isInIdle2)
             {
                 animator.SetTrigger(idle2AnimationTrigger);
@@ -200,14 +153,14 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            // Resetear el temporizador si hay movimiento
             idleTimer = 0f;
             isInIdle2 = false;
         }
     }
+
     void HandleCameraRotation()
     {
-        if (Mathf.Abs(Input.GetAxis("Horizontal")) < 0.1f || isAiming)
+        if (Mathf.Abs(Input.GetAxis("Horizontal")) < 0.1f || (aimThrowController && aimThrowController.IsAiming))
         {
             float mouseX = Input.GetAxis("Mouse X") * cameraRotationSpeed;
             float mouseY = Input.GetAxis("Mouse Y") * cameraRotationSpeed;
@@ -231,66 +184,45 @@ public class PlayerController : MonoBehaviour
         {
             speed = crouchWalkSpeed;
             animator.SetBool("IsWalkingCrouched", Mathf.Abs(currentSpeed) > 0.1f);
+            animator.SetBool("IsRunning", false); // Asegura que no se active running mientras está agachado
         }
         else
         {
-            bool isRunning = Input.GetKey(KeyCode.LeftShift) && !isAiming;
+            bool isRunning = Input.GetKey(KeyCode.LeftShift) && (!aimThrowController || !aimThrowController.IsAiming);
             speed = isRunning ? runSpeed : walkSpeed;
             animator.SetBool("IsRunning", isRunning);
+            animator.SetBool("IsWalkingCrouched", false); // Asegura que no se active caminar agachado cuando esta de pie
         }
     }
 
     void HandleCrouch()
     {
-        if (isAiming) return;
+        //Si mantiene cntrl presionado se agacha, si no se levanta
+        if (aimThrowController && aimThrowController.IsAiming) return;
 
-        bool isMoving = Mathf.Abs(currentSpeed) > 0.1f || Mathf.Abs(currentRotation) > 0.1f;
-        bool isRunning = animator.GetBool("IsRunning");
+        bool wantToCrouch = Input.GetKey(KeyCode.LeftControl);
 
-        if (!isMoving && !isRunning)
+        if (wantToCrouch != isCrouching)
         {
-            if (Input.GetKeyDown(KeyCode.LeftControl))
+            isCrouching = wantToCrouch;
+
+            if (isCrouching)
             {
-                ToggleCrouch();
+                targetHeight = crouchHeight;
+                targetCenter = crouchCenter;
+            }
+            else
+            {
+                targetHeight = standingHeight;
+                targetCenter = standingCenter;
             }
 
-            if (isCrouching && CanStandUp() && !Input.GetKey(KeyCode.LeftControl))
-            {
-                ToggleCrouch();
-            }
+            animator.SetBool("IsCrouching", isCrouching);
         }
     }
-
-    void ToggleCrouch()
-    {
-        isCrouching = !isCrouching;
-
-        if (isCrouching)
-        {
-            targetHeight = crouchHeight;
-            targetCenter = crouchCenter;
-        }
-        else if (CanStandUp())
-        {
-            targetHeight = standingHeight;
-            targetCenter = standingCenter;
-        }
-        else
-        {
-            isCrouching = true;
-        }
-
-        animator.SetBool("IsCrouching", isCrouching);
-    }
-
-    bool CanStandUp()
-    {
-        return !Physics.Raycast(transform.position, Vector3.up, standingHeight - crouchHeight);
-    }
-
     void Jump()
     {
-        if (jumpInput && isGrounded && !isCrouching && !isAiming)
+        if (jumpInput && isGrounded && !isCrouching && (!aimThrowController || !aimThrowController.IsAiming))
         {
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
             isGrounded = false;
@@ -511,6 +443,7 @@ public class PlayerController : MonoBehaviour
             animator.SetBool("TurningLeft", false);
         }
     }
+
     void ResetIdleState()
     {
         idleTimer = 0f;
