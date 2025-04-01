@@ -5,7 +5,7 @@ public class EnemyAI : MonoBehaviour
 {
     [Header("Player Detection")]
     public Transform player;
-    public float detectionRange =2f;
+    public float detectionRange = 2f;
 
     [Header("Movement Speeds")]
     public float patrolSpeed = 1f;
@@ -20,22 +20,35 @@ public class EnemyAI : MonoBehaviour
     public float stoppingDistance = 0.3f;
 
     private NavMeshAgent agent;
-    [SerializeField] private float currentSpeed;
     private bool isChasing = false;
+
+    private Animator animator;
 
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
-        currentSpeed = patrolSpeed;
         agent.speed = patrolSpeed;
-        agent.stoppingDistance = 0f;
-        SetRandomDestination();
+        agent.stoppingDistance = 0f;  
+
+        animator = GetComponent<Animator>();
+
+        if (animator == null)
+        {
+            Debug.LogError("No se encontró el componente Animator en el enemigo.");
+        }
+
+        animator.SetBool("isWalking", true);
+
+        SetRandomDestination();  // Empieza el patrullaje con destino aleatorio
+
+
     }
 
     void Update()
     {
         float distanceToPlayer = Vector3.Distance(transform.position, player.position);
 
+        // Si el jugador entra en el rango de detección, comienza a perseguirlo
         if (distanceToPlayer <= detectionRange)
         {
             ChasePlayer();
@@ -52,9 +65,11 @@ public class EnemyAI : MonoBehaviour
         if (isChasing)
         {
             isChasing = false;
-            currentSpeed = patrolSpeed;
-            agent.speed = patrolSpeed;
-            agent.stoppingDistance = 0f; // No hay distancia de parada al patrullar
+            agent.speed = patrolSpeed;  
+            agent.stoppingDistance = 0f; 
+            agent.velocity = Vector3.zero;  // Detenemos la velocidad al patrullar
+
+            
         }
 
         patrolTimer += Time.deltaTime;
@@ -63,26 +78,44 @@ public class EnemyAI : MonoBehaviour
             SetRandomDestination();
             patrolTimer = 0f;
         }
+
+        animator.SetBool("IsWalking", true);
+        animator.SetBool("IsAttacking", false);
     }
 
-    // 🔹 Persigue al jugador con aceleración progresiva
+    // 🔹 Persigue al jugador
     private void ChasePlayer()
     {
         if (!isChasing)
         {
             isChasing = true;
-            agent.speed = chaseSpeed;
-            agent.stoppingDistance = stoppingDistance;
+            agent.speed = chaseSpeed;  
+            agent.stoppingDistance = stoppingDistance; 
+
+            animator.SetBool("IsWalking", false);
+            animator.SetBool("IsAttacking", true);
+
+
         }
 
-        agent.SetDestination(player.position);
+        float distanceToTarget = Vector3.Distance(transform.position, player.position);
+
+        // Si está cerca del jugador (dentro del stoppingDistance), lo detiene
+        if (distanceToTarget <= stoppingDistance)
+        {
+            agent.velocity = Vector3.zero;  // Se detiene
+        }
+        else
+        {
+            agent.SetDestination(player.position);  // Sigue al jugador si está fuera de stoppingDistance
+        }
     }
 
     // 🔹 Genera un punto aleatorio dentro del radio de patrullaje
     private void SetRandomDestination()
     {
         Vector3 randomPoint = RandomNavSphere(transform.position, patrolRadius);
-        agent.SetDestination(randomPoint);
+        agent.SetDestination(randomPoint);  // Asigna un destino aleatorio dentro del radio de patrullaje
     }
 
     // 🔹 Encuentra un punto aleatorio en el NavMesh dentro de un radio
@@ -93,7 +126,7 @@ public class EnemyAI : MonoBehaviour
 
         if (NavMesh.SamplePosition(finalPosition, out NavMeshHit hit, distance, NavMesh.AllAreas))
         {
-            return hit.position;
+            return hit.position;  // Devuelve una posición válida en el NavMesh
         }
 
         return origin; // Si no encuentra un punto válido, se queda en el mismo lugar
