@@ -181,7 +181,7 @@ Material:
     - _Player_Position: {r: 0, g: 0, b: 0, a: 0}
     - _SpecColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
     - _TopColor: {r: 0.58158517, g: 0.754717, b: 0, a: 0}
-    - _Top_Color: {r: 0.99215686, g: 0.36862746, b: 0.43011037, a: 0}
+    - _Top_Color: {r: 0.5396226, g: 0.14152363, b: 0.18158387, a: 0}
     - _WindDirection: {r: 0.1, g: 0.1, b: 0, a: 0}
     - _Wind_Direction: {r: 0.1, g: 0.1, b: 0, a: 0}
   m_BuildTextureStacks: []
