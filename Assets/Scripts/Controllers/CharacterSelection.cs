@@ -1,146 +1,209 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 
+[System.Serializable]
+public class CharacterVariation
+{
+    public string variationName;       // Nombre de la variación 
+    public Material sharedMaterial;    // Material que se aplicará a todos los SkinnedMeshRenderers
+    public Sprite variationIcon;       // Icono opcional para el UI
+}
+
+[System.Serializable]
+public class CharacterData
+{
+    public GameObject characterObject; // Personaje en la escena (hombre/mujer)
+    public string characterName;      // Nombre para mostrar en el UI
+    public List<CharacterVariation> variations; // Lista de estilos/materiales
+    public string enterAnimationTrigger = "Enter"; // Trigger de animación inicial
+}
+
 public class CharacterSelection : MonoBehaviour
 {
-    [System.Serializable]
-    public class RendererSettings
+    [Header("CHARACTER SETTINGS")]
+    public List<CharacterData> characters;      // Lista de personajes disponibles
+    public Transform previewPosition;          // Posición durante la selección
+    public Transform spawnPosition;            // Posición al confirmar
+    public float enterAnimationDuration = 1f;  // Duración de la animación inicial
+
+    [Header("UI SETTINGS")]
+    public TMP_Dropdown characterDropdown;     // Dropdown para elegir personaje
+    public TMP_Dropdown variationDropdown;     // Dropdown para elegir variación
+    public TextMeshProUGUI infoText;           // Muestra el personaje/variación seleccionada
+    public Button confirmButton;               // Botón para confirmar selección
+
+    private int currentCharIndex = 0;          // Índice del personaje actual
+    private int currentVarIndex = 0;           // Índice de la variación actual
+    private List<SkinnedMeshRenderer> characterRenderers = new List<SkinnedMeshRenderer>();
+    private Animator currentAnimator;          // Animator del personaje actual
+
+    void Start()
     {
-        public Renderer targetRenderer;
-        public Material[] availableMaterials;
-        public Vector3 previewPosition;  // Posición durante edición
-        public Vector3 spawnPosition;    // Posición final al guardar
-        public Vector3 previewScale = Vector3.one * 0.8f;
-        public Vector3 finalScale = Vector3.one;
-        [HideInInspector] public int selectedMaterialIndex = 0;
+        InitializeCharacters(); // Desactiva todos los personajes
+        InitializeUI();        // Configura los dropdowns y botones
+        StartCoroutine(PlayEnterAnimation()); // Animación al iniciar
     }
 
-    [Header("Configuración de Renderers")]
-    public RendererSettings renderer1;
-    public RendererSettings renderer2;
-
-    [Header("UI References")]
-    public TMP_Dropdown rendererDropdown;
-    public TMP_Dropdown materialDropdown;
-    public GameObject selectionCanvas;
-    public Button saveButton;
-    public TMP_Text feedbackText;
-
-    private RendererSettings currentSettings;
-
-    private void Start()
+    // entrada de animacion Idle
+    IEnumerator PlayEnterAnimation()
     {
-        InitializeSystem();
-    }
+        ShowSelectedCharacter(); // Activa el personaje seleccionado
 
-    private void InitializeSystem()
-    {
-        // Configurar dropdown de renderers
-        rendererDropdown.ClearOptions();
-        rendererDropdown.AddOptions(new System.Collections.Generic.List<string> { "Renderer 1", "Renderer 2" });
-        rendererDropdown.onValueChanged.AddListener(SwitchActiveRenderer);
-
-        // Posicionar inicialmente
-        renderer1.targetRenderer.transform.position = renderer1.previewPosition;
-        renderer2.targetRenderer.transform.position = renderer2.previewPosition;
-
-        LoadPreferences();
-        SwitchActiveRenderer(0);
-    }
-
-    private void ConfigureMaterialDropdown(RendererSettings settings)
-    {
-        materialDropdown.ClearOptions();
-        var options = new System.Collections.Generic.List<TMP_Dropdown.OptionData>();
-
-        foreach (var material in settings.availableMaterials)
+        if (currentAnimator != null && !string.IsNullOrEmpty(characters[currentCharIndex].enterAnimationTrigger))
         {
-            options.Add(new TMP_Dropdown.OptionData(material.name));
-        }
-
-        materialDropdown.AddOptions(options);
-        materialDropdown.SetValueWithoutNotify(settings.selectedMaterialIndex);
-        materialDropdown.onValueChanged.AddListener(ChangeMaterial);
-    }
-
-    public void SwitchActiveRenderer(int rendererIndex)
-    {
-        // Desactivar ambos
-        renderer1.targetRenderer.gameObject.SetActive(false);
-        renderer2.targetRenderer.gameObject.SetActive(false);
-
-        // Activar el seleccionado
-        currentSettings = rendererIndex == 0 ? renderer1 : renderer2;
-        GameObject activeRenderer = currentSettings.targetRenderer.gameObject;
-
-        // Configurar preview
-        activeRenderer.SetActive(true);
-        activeRenderer.transform.position = currentSettings.previewPosition;
-        activeRenderer.transform.localScale = currentSettings.previewScale;
-
-        // Actualizar materiales
-        ConfigureMaterialDropdown(currentSettings);
-        ChangeMaterial(currentSettings.selectedMaterialIndex);
-    }
-
-    public void ChangeMaterial(int materialIndex)
-    {
-        if (currentSettings != null && materialIndex < currentSettings.availableMaterials.Length)
-        {
-            currentSettings.selectedMaterialIndex = materialIndex;
-            currentSettings.targetRenderer.material = currentSettings.availableMaterials[materialIndex];
+            currentAnimator.SetTrigger(characters[currentCharIndex].enterAnimationTrigger); // Dispara animación
+            yield return new WaitForSeconds(enterAnimationDuration); // Espera a que termine
         }
     }
 
-    public void SaveAndMoveToSpawn()
+    // configura e inicializa los personajes
+    void InitializeCharacters()
     {
-        if (currentSettings == null) return;
+        foreach (var character in characters)
+        {
+            if (character.characterObject != null)
+            {
+                character.characterObject.SetActive(false); // Desactiva todos al inicio
 
-        // Mover a posición final
-        currentSettings.targetRenderer.transform.position = currentSettings.spawnPosition;
-        currentSettings.targetRenderer.transform.localScale = currentSettings.finalScale;
-
-        // Guardar selección
-        PlayerPrefs.SetInt("LastSelectedRenderer", rendererDropdown.value);
-        PlayerPrefs.SetInt($"Renderer{rendererDropdown.value + 1}_Material", currentSettings.selectedMaterialIndex);
-        PlayerPrefs.Save();
-
-        // Feedback
-        feedbackText.text = $"{rendererDropdown.options[rendererDropdown.value].text} guardado!";
-        feedbackText.gameObject.SetActive(true);
-        Invoke(nameof(HideFeedback), 2f);
-
-        // Ocultar UI
-        selectionCanvas.SetActive(false);
+                // Asegura que cada personaje tenga Animator
+                var animator = character.characterObject.GetComponent<Animator>();
+                if (animator == null)
+                {
+                    animator = character.characterObject.AddComponent<Animator>();
+                    Debug.LogWarning($"[!] Se añadió Animator a {character.characterName}");
+                }
+            }
+        }
     }
 
-    public void LoadPreferences()
+    // confugra la UI
+    void InitializeUI()
     {
-        // Cargar renderer seleccionado
-        if (PlayerPrefs.HasKey("LastSelectedRenderer"))
+        // Dropdown de Personajes
+        characterDropdown.ClearOptions();
+        List<string> charOptions = new List<string>();
+        foreach (var character in characters)
         {
-            int lastRenderer = PlayerPrefs.GetInt("LastSelectedRenderer");
-            rendererDropdown.value = lastRenderer;
+            charOptions.Add(character.characterName);
+        }
+        characterDropdown.AddOptions(charOptions);
+        characterDropdown.onValueChanged.AddListener(OnCharacterSelected);
+
+        // Dropdown de Variaciones
+        UpdateVariationsDropdown();
+        variationDropdown.onValueChanged.AddListener(OnVariationSelected);
+
+        // Botón de Confirmación
+        confirmButton.onClick.AddListener(ConfirmSelection);
+    }
+
+    // cambiar personaje
+    void OnCharacterSelected(int index)
+    {
+        // Oculta el personaje actual
+        if (characters[currentCharIndex].characterObject != null)
+        {
+            characters[currentCharIndex].characterObject.SetActive(false);
         }
 
-        // Cargar materiales para cada renderer
-        if (PlayerPrefs.HasKey("Renderer1_Material"))
-            renderer1.selectedMaterialIndex = PlayerPrefs.GetInt("Renderer1_Material");
-        if (PlayerPrefs.HasKey("Renderer2_Material"))
-            renderer2.selectedMaterialIndex = PlayerPrefs.GetInt("Renderer2_Material");
+        // Actualiza el índice y muestra el nuevo personaje
+        currentCharIndex = index;
+        currentVarIndex = 0;
+        ShowSelectedCharacter();
+        UpdateVariationsDropdown();
     }
 
-    private void HideFeedback()
+    // muestra el personaje seleccionado
+    void ShowSelectedCharacter()
     {
-        if (feedbackText != null)
-            feedbackText.gameObject.SetActive(false);
+        if (characters[currentCharIndex].characterObject != null)
+        {
+            GameObject selectedChar = characters[currentCharIndex].characterObject;
+            selectedChar.SetActive(true);
+            selectedChar.transform.position = previewPosition.position;
+            selectedChar.transform.rotation = previewPosition.rotation;
+
+            // Obtiene los SkinnedMeshRenderers para cambiar materiales
+            characterRenderers = new List<SkinnedMeshRenderer>(selectedChar.GetComponentsInChildren<SkinnedMeshRenderer>());
+
+            // Guarda el Animator para las animaciones
+            currentAnimator = selectedChar.GetComponent<Animator>();
+
+            ApplyCurrentVariation(); // Aplica el material seleccionado
+        }
     }
 
-    public void ShowSelector()
+    // actualiza Dropdown de variaciones
+    void UpdateVariationsDropdown()
     {
-        selectionCanvas.SetActive(true);
-        // Volver a posición de preview
-        SwitchActiveRenderer(rendererDropdown.value);
+        variationDropdown.ClearOptions();
+
+        if (characters.Count == 0 || currentCharIndex >= characters.Count) return;
+
+        List<string> varOptions = new List<string>();
+        foreach (var variation in characters[currentCharIndex].variations)
+        {
+            varOptions.Add(variation.variationName);
+        }
+
+        variationDropdown.AddOptions(varOptions);
+        variationDropdown.value = currentVarIndex;
+    }
+
+    // cambio de variacion
+    void OnVariationSelected(int index)
+    {
+        currentVarIndex = index;
+        ApplyCurrentVariation();
+    }
+
+    // aplica material (variacion) seleccionada
+    void ApplyCurrentVariation()
+    {
+        if (characterRenderers == null || characterRenderers.Count == 0) return;
+        if (characters[currentCharIndex].variations.Count == 0) return;
+
+        Material materialToApply = characters[currentCharIndex].variations[currentVarIndex].sharedMaterial;
+
+        foreach (var renderer in characterRenderers)
+        {
+            if (renderer != null)
+            {
+                renderer.material = materialToApply;
+            }
+        }
+
+        UpdateUIInfo(); // Actualiza el texto en pantalla
+    }
+
+    // actualiza texto de seleccion
+    void UpdateUIInfo()
+    {
+        infoText.text = $"<b>{characters[currentCharIndex].characterName}</b>\n" +
+                      $"<color=#FFD700>{characters[currentCharIndex].variations[currentVarIndex].variationName}</color>";
+    }
+
+    // confirmar personaje para el spawn del mapa
+    void ConfirmSelection()
+    {
+        if (characters[currentCharIndex].characterObject != null)
+        {
+            characters[currentCharIndex].characterObject.transform.position = spawnPosition.position;
+            characters[currentCharIndex].characterObject.transform.rotation = spawnPosition.rotation;
+        }
+    }
+
+    // Rota el personaje en la preview
+    void Update()
+    {
+        if (characters.Count > currentCharIndex &&
+            characters[currentCharIndex].characterObject != null &&
+            characters[currentCharIndex].characterObject.activeSelf)
+        {
+            characters[currentCharIndex].characterObject.transform.Rotate(0, 20 * Time.deltaTime, 0);
+        }
     }
 }
