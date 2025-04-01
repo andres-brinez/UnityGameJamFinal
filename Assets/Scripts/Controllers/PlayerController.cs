@@ -177,63 +177,42 @@ public class PlayerController : MonoBehaviour
         {
             speed = crouchWalkSpeed;
             animator.SetBool("IsWalkingCrouched", Mathf.Abs(currentSpeed) > 0.1f);
+            animator.SetBool("IsRunning", false); // Asegura que no se active running mientras está agachado
         }
         else
         {
             bool isRunning = Input.GetKey(KeyCode.LeftShift) && (!aimThrowController || !aimThrowController.IsAiming);
             speed = isRunning ? runSpeed : walkSpeed;
             animator.SetBool("IsRunning", isRunning);
+            animator.SetBool("IsWalkingCrouched", false); // Asegura que no se active caminar agachado cuando esta de pie
         }
     }
 
     void HandleCrouch()
     {
+        //Si mantiene cntrl presionado se agacha, si no se levanta
         if (aimThrowController && aimThrowController.IsAiming) return;
 
-        bool isMoving = Mathf.Abs(currentSpeed) > 0.1f || Mathf.Abs(currentRotation) > 0.1f;
-        bool isRunning = animator.GetBool("IsRunning");
+        bool wantToCrouch = Input.GetKey(KeyCode.LeftControl);
 
-        if (!isMoving && !isRunning)
+        if (wantToCrouch != isCrouching)
         {
-            if (Input.GetKeyDown(KeyCode.LeftControl))
+            isCrouching = wantToCrouch;
+
+            if (isCrouching)
             {
-                ToggleCrouch();
+                targetHeight = crouchHeight;
+                targetCenter = crouchCenter;
+            }
+            else
+            {
+                targetHeight = standingHeight;
+                targetCenter = standingCenter;
             }
 
-            if (isCrouching && CanStandUp() && !Input.GetKey(KeyCode.LeftControl))
-            {
-                ToggleCrouch();
-            }
+            animator.SetBool("IsCrouching", isCrouching);
         }
     }
-
-    void ToggleCrouch()
-    {
-        isCrouching = !isCrouching;
-
-        if (isCrouching)
-        {
-            targetHeight = crouchHeight;
-            targetCenter = crouchCenter;
-        }
-        else if (CanStandUp())
-        {
-            targetHeight = standingHeight;
-            targetCenter = standingCenter;
-        }
-        else
-        {
-            isCrouching = true;
-        }
-
-        animator.SetBool("IsCrouching", isCrouching);
-    }
-
-    bool CanStandUp()
-    {
-        return !Physics.Raycast(transform.position, Vector3.up, standingHeight - crouchHeight);
-    }
-
     void Jump()
     {
         if (jumpInput && isGrounded && !isCrouching && (!aimThrowController || !aimThrowController.IsAiming))
