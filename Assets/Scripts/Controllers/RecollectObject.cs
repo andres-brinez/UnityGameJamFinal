@@ -6,14 +6,11 @@ public class CollectableItem : MonoBehaviour
     [Header("Configuración Básica")]
     public string itemName;
     public GameObject pickupText;
-    public Animator playerAnimator;
     public string collectAnimationName = "Pickup";
 
     [Header("Tiempos")]
     public float animationDelay = 0.5f; // Tiempo antes de empezar animación
-    public float postAnimationDelay = 0.5f; // Tiempo despues de animación
-
-    public PlayerController playerController;
+    public float postAnimationDelay = 0.5f; // Tiempo después de animación
 
     private bool isInRange = false;
     private bool isCollecting = false;
@@ -28,11 +25,25 @@ public class CollectableItem : MonoBehaviour
 
     private void Update()
     {
-        //Al presionar la E hara la animacion de recolectar y apaga el script del playerController para evitar movimientos mientras recolectamos
+        // Si está en rango, se presiona E y no se está recolectando
         if (isInRange && Input.GetKeyDown(KeyCode.E) && !isCollecting)
         {
-            playerController.enabled = false;
-            StartCoroutine(CollectItemRoutine());
+            // Buscar al jugador más cercano dentro del trigger
+            Collider[] nearbyPlayers = Physics.OverlapSphere(transform.position, 2f);
+            foreach (var playerCollider in nearbyPlayers)
+            {
+                if (playerCollider.CompareTag("Player"))
+                {
+                    PlayerController playerController = playerCollider.GetComponent<PlayerController>();
+                    Animator playerAnimator = playerCollider.GetComponent<Animator>();
+
+                    if (playerController != null && playerAnimator != null)
+                    {
+                        StartCoroutine(CollectItemRoutine(playerAnimator, playerController));
+                        break; // Solo interactúa con el primer jugador encontrado
+                    }
+                }
+            }
         }
     }
 
@@ -60,7 +71,7 @@ public class CollectableItem : MonoBehaviour
         }
     }
 
-    private IEnumerator CollectItemRoutine()
+    private IEnumerator CollectItemRoutine(Animator targetAnimator, PlayerController targetController)
     {
         isCollecting = true;
 
@@ -70,26 +81,29 @@ public class CollectableItem : MonoBehaviour
             pickupText.SetActive(false);
         }
 
+        // 2. Desactivar el movimiento del jugador
+        targetController.enabled = false;
+
         // Pequeña pausa antes de la animación (opcional)
         yield return new WaitForSeconds(animationDelay);
 
-        // 2. Reproducir la animación de recoleccion
-        if (playerAnimator != null)
+        // 3. Reproducir la animación de recolección
+        if (targetAnimator != null)
         {
-            playerAnimator.Play(collectAnimationName);
+            targetAnimator.Play(collectAnimationName);
 
             // Esperar a que la animación termine
-            yield return new WaitForSeconds(GetAnimationLength(playerAnimator, collectAnimationName));
+            yield return new WaitForSeconds(GetAnimationLength(targetAnimator, collectAnimationName));
         }
 
         // Pequeña pausa después de la animación (opcional)
         yield return new WaitForSeconds(postAnimationDelay);
 
-        // 3. Añadir el objeto al inventario en el futuro
+        // 4. (OPCIONAL) Añadir el objeto al inventario
         //InventoryManager.instance.AddItem(itemName);
 
-        // 4. Desactivamos el objeto recolectable y el scrip se vuelve activar para seguir moviendose
-        playerController.enabled = true;
+        // 5. Reactivar el movimiento del jugador y desactivar el objeto
+        targetController.enabled = true;
         gameObject.SetActive(false);
 
         isCollecting = false;

@@ -32,7 +32,7 @@ public class PlayerController : MonoBehaviour
 
     private Rigidbody rb;
     private CapsuleCollider playerCollider;
-    private Animator animator;
+    public Animator animator;
     private Camera mainCamera;
     private PlayerAimThrow aimThrowController;
 
