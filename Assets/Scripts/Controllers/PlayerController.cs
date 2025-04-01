@@ -47,6 +47,7 @@ public class PlayerController : MonoBehaviour
     private float cameraVerticalRotation = 0f;
     private float idleTimer = 0f;
     private bool isInIdle2 = false;
+
     private string powerUpName = "PowerUp1"; // Nombre del powerup (un solo tipo)
 
 
@@ -90,8 +91,9 @@ public class PlayerController : MonoBehaviour
         {
             PowerUpThrow(); // Llama a la función para lanzar el powerup
         }
+
     }
-    
+
     void FixedUpdate()
     {
         Move();
@@ -231,180 +233,6 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    void HandleAiming()
-    {
-        if (Input.GetMouseButtonDown(1))
-        {
-            StartAiming();
-        }
-
-        if (isAiming)
-        {
-            HandleDynamicAim();
-
-            if (Mathf.Abs(currentSpeed) > 0.1f)
-            {
-                StopAiming();
-            }
-        }
-
-        if (Input.GetMouseButtonUp(1))
-        {
-            StopAiming();
-        }
-    }
-
-    void HandleDynamicAim()
-    {
-        float mouseY = Input.GetAxis("Mouse Y") * aimSensitivity;
-        currentThrowAngle = Mathf.Clamp(currentThrowAngle - mouseY, minThrowAngle, maxThrowAngle);
-
-        float distanceInput = 0f;
-        if (Input.GetKey(KeyCode.Q)) distanceInput = -1f;
-        if (Input.GetKey(KeyCode.E)) distanceInput = 1f;
-
-        currentThrowDistance = Mathf.Clamp(
-            currentThrowDistance + distanceInput * aimDistanceChangeSpeed * Time.deltaTime,
-            minThrowDistance,
-            maxThrowDistance
-        );
-    }
-
-    void HandleChargedThrow()
-    {
-        if (!isAiming) return;
-
-        if (Input.GetMouseButtonDown(0))
-        {
-            mouseDownTime = Time.time;
-            StartCharging();
-        }
-
-        if (isCharging && Input.GetMouseButton(0))
-        {
-            ContinueCharging();
-        }
-
-        if (Input.GetMouseButtonUp(0) && isCharging)
-        {
-            if (Time.time - mouseDownTime >= minThrowReleaseTime)
-            {
-                ReleaseThrow();
-            }
-            else
-            {
-                CancelThrow();
-            }
-        }
-    }
-
-    void StartCharging()
-    {
-        isCharging = true;
-        currentCharge = 0f;
-        animator.SetBool("IsChargingThrow", true);
-    }
-
-    void ContinueCharging()
-    {
-        currentCharge += Time.deltaTime * chargeSpeed;
-        currentCharge = Mathf.Clamp(currentCharge, 0f, maxChargeTime);
-        currentThrowForce = baseThrowForce * (1 + (maxChargeMultiplier - 1) * (currentCharge / maxChargeTime));
-        animator.SetFloat("ChargeAmount", currentCharge / maxChargeTime);
-    }
-
-    void ReleaseThrow()
-    {
-        ExecuteThrow();
-        isCharging = false;
-        currentCharge = 0f;
-        currentThrowForce = baseThrowForce;
-        animator.SetBool("IsChargingThrow", false);
-        animator.SetTrigger("Throw");
-    }
-
-    void CancelThrow()
-    {
-        isCharging = false;
-        currentCharge = 0f;
-        currentThrowForce = baseThrowForce;
-        animator.SetBool("IsChargingThrow", false);
-    }
-
-    void StartAiming()
-    {
-        isAiming = true;
-        animator.SetBool("IsAiming", true);
-        trajectoryLine.enabled = true;
-        if (cameraZoomController != null)
-        {
-            cameraZoomController.SetAimZoom(true);
-        }
-    }
-
-    void StopAiming()
-    {
-        isAiming = false;
-        isCharging = false;
-        currentCharge = 0f;
-        animator.SetBool("IsAiming", false);
-        animator.SetBool("IsChargingThrow", false);
-        trajectoryLine.enabled = false;
-        if (cameraZoomController != null)
-        {
-            cameraZoomController.SetAimZoom(false);
-        }
-    }
-
-    void UpdateTrajectory()
-    {
-        Vector3 throwDirection = CalculateThrowDirection();
-        float displayForce = isCharging ? currentThrowForce : baseThrowForce;
-        DrawTrajectory(throwPoint.position, throwDirection * displayForce);
-    }
-
-    Vector3 CalculateThrowDirection()
-    {
-        Vector3 baseDirection = transform.forward;
-        Vector3 playerRight = transform.right;
-        return Quaternion.AngleAxis(currentThrowAngle, -playerRight) * baseDirection;
-    }
-
-    void DrawTrajectory(Vector3 startPosition, Vector3 startVelocity)
-    {
-        List<Vector3> points = new List<Vector3>();
-        float simulationTime = currentThrowDistance / (startVelocity.magnitude * Mathf.Cos(currentThrowAngle * Mathf.Deg2Rad));
-        Vector3 previousPoint = startPosition;
-        points.Add(previousPoint);
-
-        for (float t = 0; t <= simulationTime; t += trajectoryUpdateInterval)
-        {
-            Vector3 point = startPosition + startVelocity * t + 0.5f * Physics.gravity * t * t;
-            points.Add(point);
-
-            if (Physics.Linecast(previousPoint, point, out RaycastHit hit))
-            {
-                points[points.Count - 1] = hit.point;
-                break;
-            }
-
-            previousPoint = point;
-        }
-
-        trajectoryLine.positionCount = points.Count;
-        trajectoryLine.SetPositions(points.ToArray());
-    }
-
-    void ExecuteThrow()
-    {
-        GameObject projectile = Instantiate(projectilePrefab, throwPoint.position, Quaternion.identity);
-        Rigidbody rb = projectile.GetComponent<Rigidbody>();
-        Vector3 throwDirection = CalculateThrowDirection();
-
-        projectile.transform.rotation = Quaternion.LookRotation(throwDirection);
-        rb.AddForce(throwDirection * currentThrowForce, ForceMode.Impulse);
-    }
-
     void PowerUpThrow()
     {
         int count = InventoryManager.Instance.GetPowerUpCount(powerUpName);
@@ -420,6 +248,7 @@ public class PlayerController : MonoBehaviour
             Debug.Log("No tienes powerups disponibles para lanzar.");
         }
     }
+
     void UpdateAnimations()
     {
         animator.SetFloat("Speed", Mathf.Abs(currentSpeed));
