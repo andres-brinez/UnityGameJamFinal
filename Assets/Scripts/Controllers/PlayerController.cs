@@ -48,6 +48,9 @@ public class PlayerController : MonoBehaviour
     private float idleTimer = 0f;
     private bool isInIdle2 = false;
 
+    private string powerUpName = "PowerUp1"; // Nombre del powerup (un solo tipo)
+
+
     void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -83,6 +86,12 @@ public class PlayerController : MonoBehaviour
 
         playerCollider.height = Mathf.Lerp(playerCollider.height, targetHeight, crouchTransitionSpeed * Time.deltaTime);
         playerCollider.center = Vector3.Lerp(playerCollider.center, targetCenter, crouchTransitionSpeed * Time.deltaTime);
+
+        if (Input.GetKeyDown(KeyCode.G))
+        {
+            PowerUpThrow(); // Llama a la función para lanzar el powerup
+        }
+
     }
 
     void FixedUpdate()
@@ -224,6 +233,22 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    void PowerUpThrow()
+    {
+        int count = InventoryManager.Instance.GetPowerUpCount(powerUpName);
+
+        if (count > 0)
+        {
+            InventoryManager.Instance.RemovePowerUp(powerUpName);
+            Debug.Log("PowerUp lanzado. Cantidad restante: " + InventoryManager.Instance.GetPowerUpCount(powerUpName));
+        }
+        else
+        {
+            // Si el jugador no tiene powerups, muestra un mensaje de error
+            Debug.Log("No tienes powerups disponibles para lanzar.");
+        }
+    }
+
     void UpdateAnimations()
     {
         animator.SetFloat("Speed", Mathf.Abs(currentSpeed));
@@ -255,6 +280,23 @@ public class PlayerController : MonoBehaviour
         {
             animator.ResetTrigger(idle2AnimationTrigger);
             isInIdle2 = false;
+        }
+    }
+
+    void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Ground"))
+        {
+            isGrounded = true;
+        }
+        
+    }
+
+    void OnCollisionExit(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Ground"))
+        {
+            isGrounded = false;
         }
     }
 }
