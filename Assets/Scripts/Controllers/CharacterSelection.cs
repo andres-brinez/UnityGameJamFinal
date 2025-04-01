@@ -8,17 +8,18 @@ using UnityEngine.UI;
 public class CharacterVariation
 {
     public string variationName;       // Nombre de la variación 
-    public Material sharedMaterial;    // Material que se aplicará a todos los SkinnedMeshRenderers
-    public Sprite variationIcon;       // Icono opcional para el UI
+    public Material sharedMaterial;   // Material que se aplicará
+    public Sprite variationIcon;      // Icono opcional para el UI
 }
 
 [System.Serializable]
 public class CharacterData
 {
-    public GameObject characterObject; // Personaje en la escena (hombre/mujer)
+    public GameObject characterObject; // Personaje en la escena
     public string characterName;      // Nombre para mostrar en el UI
     public List<CharacterVariation> variations; // Lista de estilos/materiales
     public string enterAnimationTrigger = "Enter"; // Trigger de animación inicial
+    public string idleAnimationState = "Idle";    // Nombre del estado de animación Idle
 }
 
 public class CharacterSelection : MonoBehaviour
@@ -39,6 +40,7 @@ public class CharacterSelection : MonoBehaviour
     private int currentVarIndex = 0;           // Índice de la variación actual
     private List<SkinnedMeshRenderer> characterRenderers = new List<SkinnedMeshRenderer>();
     private Animator currentAnimator;          // Animator del personaje actual
+    private bool hasConfirmedSelection = false; // Evita que siga animando después de confirmar
 
     void Start()
     {
@@ -47,26 +49,35 @@ public class CharacterSelection : MonoBehaviour
         StartCoroutine(PlayEnterAnimation()); // Animación al iniciar
     }
 
-    // entrada de animacion Idle
+    // Animación de entrada + Idle continuo
     IEnumerator PlayEnterAnimation()
     {
         ShowSelectedCharacter(); // Activa el personaje seleccionado
 
-        if (currentAnimator != null && !string.IsNullOrEmpty(characters[currentCharIndex].enterAnimationTrigger))
+        if (currentAnimator != null)
         {
-            currentAnimator.SetTrigger(characters[currentCharIndex].enterAnimationTrigger); // Dispara animación
-            yield return new WaitForSeconds(enterAnimationDuration); // Espera a que termine
+            // 1. Reproduce animación de entrada
+            if (!string.IsNullOrEmpty(characters[currentCharIndex].enterAnimationTrigger))
+            {
+                currentAnimator.SetTrigger(characters[currentCharIndex].enterAnimationTrigger);
+                yield return new WaitForSeconds(enterAnimationDuration);
+            }
+
+            // 2. Entra en bucle Idle hasta que se confirme
+            if (!string.IsNullOrEmpty(characters[currentCharIndex].idleAnimationState))
+            {
+                currentAnimator.Play(characters[currentCharIndex].idleAnimationState);
+            }
         }
     }
 
-    // configura e inicializa los personajes
     void InitializeCharacters()
     {
         foreach (var character in characters)
         {
             if (character.characterObject != null)
             {
-                character.characterObject.SetActive(false); // Desactiva todos al inicio
+                character.characterObject.SetActive(false);
 
                 // Asegura que cada personaje tenga Animator
                 var animator = character.characterObject.GetComponent<Animator>();
@@ -79,10 +90,8 @@ public class CharacterSelection : MonoBehaviour
         }
     }
 
-    // confugra la UI
     void InitializeUI()
     {
-        // Dropdown de Personajes
         characterDropdown.ClearOptions();
         List<string> charOptions = new List<string>();
         foreach (var character in characters)
@@ -92,31 +101,31 @@ public class CharacterSelection : MonoBehaviour
         characterDropdown.AddOptions(charOptions);
         characterDropdown.onValueChanged.AddListener(OnCharacterSelected);
 
-        // Dropdown de Variaciones
         UpdateVariationsDropdown();
         variationDropdown.onValueChanged.AddListener(OnVariationSelected);
 
-        // Botón de Confirmación
         confirmButton.onClick.AddListener(ConfirmSelection);
     }
 
-    // cambiar personaje
     void OnCharacterSelected(int index)
     {
-        // Oculta el personaje actual
         if (characters[currentCharIndex].characterObject != null)
         {
             characters[currentCharIndex].characterObject.SetActive(false);
         }
 
-        // Actualiza el índice y muestra el nuevo personaje
         currentCharIndex = index;
         currentVarIndex = 0;
         ShowSelectedCharacter();
         UpdateVariationsDropdown();
+
+        // Reinicia la animación Idle para el nuevo personaje
+        if (!hasConfirmedSelection)
+        {
+            StartCoroutine(PlayEnterAnimation());
+        }
     }
 
-    // muestra el personaje seleccionado
     void ShowSelectedCharacter()
     {
         if (characters[currentCharIndex].characterObject != null)
@@ -126,17 +135,13 @@ public class CharacterSelection : MonoBehaviour
             selectedChar.transform.position = previewPosition.position;
             selectedChar.transform.rotation = previewPosition.rotation;
 
-            // Obtiene los SkinnedMeshRenderers para cambiar materiales
             characterRenderers = new List<SkinnedMeshRenderer>(selectedChar.GetComponentsInChildren<SkinnedMeshRenderer>());
-
-            // Guarda el Animator para las animaciones
             currentAnimator = selectedChar.GetComponent<Animator>();
 
-            ApplyCurrentVariation(); // Aplica el material seleccionado
+            ApplyCurrentVariation();
         }
     }
 
-    // actualiza Dropdown de variaciones
     void UpdateVariationsDropdown()
     {
         variationDropdown.ClearOptions();
@@ -153,14 +158,12 @@ public class CharacterSelection : MonoBehaviour
         variationDropdown.value = currentVarIndex;
     }
 
-    // cambio de variacion
     void OnVariationSelected(int index)
     {
         currentVarIndex = index;
         ApplyCurrentVariation();
     }
 
-    // aplica material (variacion) seleccionada
     void ApplyCurrentVariation()
     {
         if (characterRenderers == null || characterRenderers.Count == 0) return;
@@ -176,30 +179,30 @@ public class CharacterSelection : MonoBehaviour
             }
         }
 
-        UpdateUIInfo(); // Actualiza el texto en pantalla
+        UpdateUIInfo();
     }
 
-    // actualiza texto de seleccion
     void UpdateUIInfo()
     {
         infoText.text = $"<b>{characters[currentCharIndex].characterName}</b>\n" +
                       $"<color=#FFD700>{characters[currentCharIndex].variations[currentVarIndex].variationName}</color>";
     }
 
-    // confirmar personaje para el spawn del mapa
     void ConfirmSelection()
     {
         if (characters[currentCharIndex].characterObject != null)
         {
             characters[currentCharIndex].characterObject.transform.position = spawnPosition.position;
             characters[currentCharIndex].characterObject.transform.rotation = spawnPosition.rotation;
+            hasConfirmedSelection = true; // Detiene la rotación y animación Idle
         }
     }
 
-    // Rota el personaje en la preview
     void Update()
     {
-        if (characters.Count > currentCharIndex &&
+        // Rota el personaje solo si no se ha confirmado la selección
+        if (!hasConfirmedSelection &&
+            characters.Count > currentCharIndex &&
             characters[currentCharIndex].characterObject != null &&
             characters[currentCharIndex].characterObject.activeSelf)
         {

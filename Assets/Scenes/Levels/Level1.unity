@@ -6975,6 +6975,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   characters:
+  - characterObject: {fileID: 4838985055724061832}
+    characterName: Woman
+    variations:
+    - variationName: 1
+      sharedMaterial: {fileID: 2100000, guid: b8022ab11685ec14495521837b2d8a80, type: 2}
+      variationIcon: {fileID: 0}
+    - variationName: 2
+      sharedMaterial: {fileID: 2100000, guid: 24b60af863528f749815a7416914e1b2, type: 2}
+      variationIcon: {fileID: 0}
+    enterAnimationTrigger: Idle2
+    idleAnimationState: Idle2
   - characterObject: {fileID: 5349702719845632225}
     characterName: Man
     variations:
@@ -6988,16 +6999,7 @@ MonoBehaviour:
       sharedMaterial: {fileID: 2100000, guid: 8f5964cdc009b1b42945f0563ddf2516, type: 2}
       variationIcon: {fileID: 0}
     enterAnimationTrigger: Idle2
-  - characterObject: {fileID: 4838985055724061832}
-    characterName: Woman
-    variations:
-    - variationName: 1
-      sharedMaterial: {fileID: 2100000, guid: b8022ab11685ec14495521837b2d8a80, type: 2}
-      variationIcon: {fileID: 0}
-    - variationName: 2
-      sharedMaterial: {fileID: 2100000, guid: 24b60af863528f749815a7416914e1b2, type: 2}
-      variationIcon: {fileID: 0}
-    enterAnimationTrigger: Idle2
+    idleAnimationState: Idle2
   previewPosition: {fileID: 794063477}
   spawnPosition: {fileID: 49512499}
   enterAnimationDuration: 1.5
@@ -7569,11 +7571,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1652587128212453115, guid: 563f1ed5af4c4c343bf57372752357c0, type: 3}
       propertyPath: CameraDistance
-      value: 3.659999
+      value: 3.659837
       objectReference: {fileID: 0}
     - target: {fileID: 1652587128212453115, guid: 563f1ed5af4c4c343bf57372752357c0, type: 3}
       propertyPath: ShoulderOffset.x
-      value: 0.3300002
+      value: 0.3300358
       objectReference: {fileID: 0}
     - target: {fileID: 2419167007114674307, guid: 563f1ed5af4c4c343bf57372752357c0, type: 3}
       propertyPath: m_Name
@@ -7910,11 +7912,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2380347347647168891, guid: b957c702003ce354eb899fd1578bfef2, type: 3}
       propertyPath: CameraDistance
-      value: 3.657528
+      value: 3.651826
       objectReference: {fileID: 0}
     - target: {fileID: 2380347347647168891, guid: b957c702003ce354eb899fd1578bfef2, type: 3}
       propertyPath: ShoulderOffset.x
-      value: 0.330541
+      value: 0.331788
       objectReference: {fileID: 0}
     - target: {fileID: 2701920353176967664, guid: b957c702003ce354eb899fd1578bfef2, type: 3}
       propertyPath: m_IsActive
