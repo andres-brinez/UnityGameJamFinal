@@ -1264,8 +1264,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 734226927}
   m_HandleRect: {fileID: 734226926}
   m_Direction: 0
-  m_Value: 0.40355548
-  m_Size: 0.6224455
+  m_Value: 0.4035555
+  m_Size: 0.6224456
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -1417,7 +1417,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7033188996662054923, guid: b3681158d2430f846845669177750ce9, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7033188996662054923, guid: b3681158d2430f846845669177750ce9, type: 3}
       propertyPath: m_AnchorMin.x
@@ -1425,7 +1425,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7033188996662054923, guid: b3681158d2430f846845669177750ce9, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7033188996662054923, guid: b3681158d2430f846845669177750ce9, type: 3}
       propertyPath: m_SizeDelta.x
@@ -1477,11 +1477,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7033188996662054923, guid: b3681158d2430f846845669177750ce9, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 180
+      value: 151
       objectReference: {fileID: 0}
     - target: {fileID: 7033188996662054923, guid: b3681158d2430f846845669177750ce9, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -570
+      value: 87
       objectReference: {fileID: 0}
     - target: {fileID: 7033188996662054923, guid: b3681158d2430f846845669177750ce9, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -1698,13 +1698,54 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "CREDITS\n\nAndrea Ria\xF1o\nArtist 3D, VFX, Animator\n\nDaniel Valencia\nArtist
-    3D, VFX, Documentation\n\nAndres Bri\xF1ez\nProgramer\n\nDavid Felipe Baquero\nGame
-    Programing, VFX\n\nASSETS\nUNITY ASSSET STORE\n\nMUSIC\nDaniel Valencia\n\nOTHERS
-    CREDITS...\n.\n.\n.\n"
+  m_text: 'CREDITS
+
+
+    Andrea Riano
+
+    Artist 3D, VFX, Animator
+
+
+    Daniel
+    Valencia
+
+    Artist 3D, VFX, Documentation
+
+
+    Andres Brinez
+
+    Programer
+
+
+    David
+    Felipe Baquero
+
+    Game Programing, VFX
+
+
+    ASSETS
+
+    UNITY ASSSET STORE
+
+
+    MUSIC
+
+    Daniel
+    Valencia
+
+
+    OTHERS CREDITS...
+
+    .
+
+    .
+
+    .
+
+'
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: a169ee1283bab0940bdce98dbd340486, type: 2}
-  m_sharedMaterial: {fileID: -6831564671565087539, guid: a169ee1283bab0940bdce98dbd340486, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: d0350139fc14bcc4f8dfda3debfd1cab, type: 2}
+  m_sharedMaterial: {fileID: 549476215833533602, guid: d0350139fc14bcc4f8dfda3debfd1cab, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1728,8 +1769,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 5.45
-  m_fontSizeBase: 5.45
+  m_fontSize: 4.69
+  m_fontSizeBase: 4.69
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
