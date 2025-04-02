@@ -4011,7 +4011,7 @@ GameObject:
   - component: {fileID: 991434526}
   - component: {fileID: 991434525}
   m_Layer: 0
-  m_Name: Object
+  m_Name: ObjectRecollectable
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5226,7 +5226,7 @@ GameObject:
   - component: {fileID: 1423526325}
   - component: {fileID: 1423526324}
   m_Layer: 5
-  m_Name: Canvas
+  m_Name: CanvasSelection
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7916,11 +7916,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2380347347647168891, guid: b957c702003ce354eb899fd1578bfef2, type: 3}
       propertyPath: CameraDistance
-      value: 2.060779
+      value: 3.659999
       objectReference: {fileID: 0}
     - target: {fileID: 2380347347647168891, guid: b957c702003ce354eb899fd1578bfef2, type: 3}
       propertyPath: ShoulderOffset.x
-      value: 0.6798297
+      value: 0.3300002
       objectReference: {fileID: 0}
     - target: {fileID: 2701920353176967664, guid: b957c702003ce354eb899fd1578bfef2, type: 3}
       propertyPath: m_IsActive
@@ -8057,20 +8057,20 @@ Transform:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
-  - {fileID: 679741417}
+  - {fileID: 666109030}
+  - {fileID: 2122382552}
   - {fileID: 1423526327}
+  - {fileID: 49512499}
+  - {fileID: 794063477}
+  - {fileID: 991434529}
+  - {fileID: 648337494}
+  - {fileID: 713337980}
+  - {fileID: 3749174258483648697}
+  - {fileID: 5498509659982241538}
+  - {fileID: 679741417}
   - {fileID: 1321385768}
   - {fileID: 949486856}
   - {fileID: 1120181050}
-  - {fileID: 2122382552}
-  - {fileID: 49512499}
-  - {fileID: 794063477}
   - {fileID: 1475058095}
-  - {fileID: 666109030}
   - {fileID: 1662409315}
   - {fileID: 141541794970272514}
-  - {fileID: 991434529}
-  - {fileID: 713337980}
-  - {fileID: 648337494}
-  - {fileID: 3749174258483648697}
-  - {fileID: 5498509659982241538}
