@@ -494,6 +494,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Ambientation
       objectReference: {fileID: 0}
+    - target: {fileID: 1552847278434686851, guid: d847a4d207dea0c4db12223a39775e38, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6311378906825879061, guid: d847a4d207dea0c4db12223a39775e38, type: 3}
       propertyPath: m_LocalPosition.x
       value: 243.3445
