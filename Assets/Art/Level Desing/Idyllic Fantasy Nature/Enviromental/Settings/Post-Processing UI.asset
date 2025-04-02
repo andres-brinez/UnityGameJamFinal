@@ -87,7 +87,7 @@ MonoBehaviour:
     m_Value: 0.1
   contrast:
     m_OverrideState: 1
-    m_Value: 20
+    m_Value: -7.9
   colorFilter:
     m_OverrideState: 0
     m_Value: {r: 1, g: 0.9987028, b: 0.9481132, a: 1}
@@ -118,7 +118,7 @@ MonoBehaviour:
     m_Value: {x: 0.5, y: 0.5}
   intensity:
     m_OverrideState: 1
-    m_Value: 0.22
+    m_Value: 0.373
   smoothness:
     m_OverrideState: 1
     m_Value: 1
@@ -213,7 +213,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d7fd9488000d3734a9e00ee676215985, type: 3}
-  m_Name: Post-Processing
+  m_Name: Post-Processing UI
   m_EditorClassIdentifier: 
   components:
   - {fileID: 4029308756648696624}
