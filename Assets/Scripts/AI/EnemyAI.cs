@@ -1,23 +1,24 @@
 using UnityEngine;
 using UnityEngine.AI;
+using System.Collections;
 
 public class EnemyAI : MonoBehaviour
 {
     [Header("Player Detection")]
     public Transform player;
-    public float detectionRange = 2f;
+    public float detectionRange = 12f;
 
     [Header("Movement Speeds")]
-    public float patrolSpeed = 1f;
-    public float chaseSpeed = 1.2f;
+    public float patrolSpeed = 40f;
+    public float chaseSpeed = 50f;
 
     [Header("Patrol Settings")]
-    public float patrolRadius = 3f;
+    public float patrolRadius = 13f;
     public float patrolDelay = 6f;
     private float patrolTimer = 0f;
 
     [Header("Chase Settings")]
-    public float stoppingDistance = 0.3f;
+    public float stoppingDistance = 1f;
 
     private NavMeshAgent agent;
     private bool isChasing = false;
@@ -28,24 +29,23 @@ public class EnemyAI : MonoBehaviour
     {
         agent = GetComponent<NavMeshAgent>();
         agent.speed = patrolSpeed;
-        agent.stoppingDistance = 0f;  
+        agent.stoppingDistance = 0f;
 
         animator = GetComponent<Animator>();
 
-        if (animator == null)
-        {
-            Debug.LogError("No se encontró el componente Animator en el enemigo.");
-        }
+        if (animator == null) { Debug.LogError("No se encontró el componente Animator en el enemigo."); }
 
         animator.SetBool("isWalking", true);
 
         SetRandomDestination();  // Empieza el patrullaje con destino aleatorio
 
+        StartCoroutine(WaitForCanvasToDisable());
 
     }
 
     void Update()
     {
+        if(player == null) return; // Si el jugador no está asignado, no hace nada
         float distanceToPlayer = Vector3.Distance(transform.position, player.position);
 
         // Si el jugador entra en el rango de detección, comienza a perseguirlo
@@ -59,17 +59,41 @@ public class EnemyAI : MonoBehaviour
         }
     }
 
+    IEnumerator WaitForCanvasToDisable()
+    {
+        GameObject canvasSelection = GameObject.Find("CanvasSelection"); 
+
+        if (canvasSelection != null)
+        {
+            while (canvasSelection.activeSelf) // Mientras el canvas esté activo, espera
+            {
+                yield return null;
+            }
+        }
+
+        player = GameObject.FindGameObjectWithTag("Player")?.transform;
+
+        if (player == null)
+        {
+            Debug.LogError("No se encontró ningún jugador con la etiqueta 'Player'.");
+        }
+        else
+        {
+            Debug.Log("Jugador detectado: " + player.name);
+            
+        }
+    }
     // 🔹 Lógica de patrullaje
     private void Patrol()
     {
         if (isChasing)
         {
             isChasing = false;
-            agent.speed = patrolSpeed;  
-            agent.stoppingDistance = 0f; 
+            agent.speed = patrolSpeed;
+            agent.stoppingDistance = 0f;
             agent.velocity = Vector3.zero;  // Detenemos la velocidad al patrullar
 
-            
+
         }
 
         patrolTimer += Time.deltaTime;
@@ -79,7 +103,7 @@ public class EnemyAI : MonoBehaviour
             patrolTimer = 0f;
         }
 
-        animator.SetBool("IsWalking", true);
+        animator.SetBool("isWalking", true);
         animator.SetBool("IsAttacking", false);
     }
 
@@ -89,13 +113,11 @@ public class EnemyAI : MonoBehaviour
         if (!isChasing)
         {
             isChasing = true;
-            agent.speed = chaseSpeed;  
-            agent.stoppingDistance = stoppingDistance; 
+            agent.speed = chaseSpeed;
+            agent.stoppingDistance = stoppingDistance;
 
-            animator.SetBool("IsWalking", false);
+            animator.SetBool("isWalking", false);
             animator.SetBool("IsAttacking", true);
-
-
         }
 
         float distanceToTarget = Vector3.Distance(transform.position, player.position);
@@ -109,6 +131,8 @@ public class EnemyAI : MonoBehaviour
         {
             agent.SetDestination(player.position);  // Sigue al jugador si está fuera de stoppingDistance
         }
+
+        LookAtPlayer();
     }
 
     // 🔹 Genera un punto aleatorio dentro del radio de patrullaje
@@ -132,6 +156,15 @@ public class EnemyAI : MonoBehaviour
         return origin; // Si no encuentra un punto válido, se queda en el mismo lugar
     }
 
+    private void LookAtPlayer()
+    {
+        if (player == null) return;
+
+        Vector3 direction = (player.position - transform.position).normalized;
+        direction.y = 0;  // Evita giros en el eje Y
+        Quaternion lookRotation = Quaternion.LookRotation(direction);
+        transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 5f);
+    }
     // 🔹 Dibuja los rangos en la vista del editor
     void OnDrawGizmosSelected()
     {

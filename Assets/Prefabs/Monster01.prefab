@@ -639,7 +639,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 0.99912703, z: -0, w: 0.04177574}
   m_LocalPosition: {x: 332.2903, y: -0.5413, z: -181.541}
-  m_LocalScale: {x: 5, y: 5, z: 5}
+  m_LocalScale: {x: 150, y: 150, z: 150}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 3752532456208666678}
@@ -681,13 +681,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 0}
-  detectionRange: 2
-  patrolSpeed: 1
-  chaseSpeed: 1.2
-  patrolRadius: 3
+  detectionRange: 12
+  patrolSpeed: 59
+  chaseSpeed: 67
+  patrolRadius: 13
   patrolDelay: 6
-  stoppingDistance: 0.3
-  currentSpeed: 0
+  stoppingDistance: 1
 --- !u!195 &5789785942079513070
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -707,7 +706,7 @@ NavMeshAgent:
   m_AutoBraking: 1
   m_AutoRepath: 1
   m_Height: 2
-  m_BaseOffset: 0
+  m_BaseOffset: 0.005
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
 --- !u!1 &3903511424456055817
