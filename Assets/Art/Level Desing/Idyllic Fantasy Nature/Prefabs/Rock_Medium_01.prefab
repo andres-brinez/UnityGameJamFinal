@@ -182,7 +182,8 @@ GameObject:
   m_Component:
   - component: {fileID: 5297548855142917828}
   - component: {fileID: 1143548395090907573}
-  - component: {fileID: -7583975049538506736}
+  - component: {fileID: 6815487101082228219}
+  - component: {fileID: -3661035854457834084}
   m_Layer: 6
   m_Name: Rock_Medium_01
   m_TagString: Untagged
@@ -235,8 +236,8 @@ LODGroup:
     renderers:
     - renderer: {fileID: 778003086665378863}
   m_Enabled: 1
---- !u!65 &-7583975049538506736
-BoxCollider:
+--- !u!64 &6815487101082228219
+MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -253,9 +254,26 @@ BoxCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -2569472812387245488, guid: 6966a7e11d8e6354388675734b5baf28, type: 3}
+--- !u!208 &-3661035854457834084
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4814203077141888126}
+  m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 4.475602, y: 3.6110845, z: 4.2553186}
-  m_Center: {x: 0, y: -0.09373492, z: 0}
+  m_Shape: 1
+  m_Extents: {x: 0.5, y: 0.5, z: 0.5}
+  m_MoveThreshold: 0.1
+  m_Carve: 0
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!1 &8882675911698142570
 GameObject:
   m_ObjectHideFlags: 0

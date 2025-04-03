@@ -273,6 +273,7 @@ GameObject:
   - component: {fileID: 4059349829627194340}
   - component: {fileID: 6507421944412776698}
   - component: {fileID: 3946127652225070084}
+  - component: {fileID: -1295855475365108894}
   m_Layer: 7
   m_Name: BroadleafTree_05_Red
   m_TagString: Untagged
@@ -371,3 +372,19 @@ CapsuleCollider:
   m_Height: 2.41
   m_Direction: 1
   m_Center: {x: -0.3, y: 2.38, z: 0}
+--- !u!208 &-1295855475365108894
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8450013131937564207}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 0
+  m_Extents: {x: 0.5, y: 0.5, z: 0.5}
+  m_MoveThreshold: 0.1
+  m_Carve: 0
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 0.5
