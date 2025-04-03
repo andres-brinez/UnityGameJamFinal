@@ -1,3 +1,4 @@
+using System.Security.Cryptography;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -12,7 +13,7 @@ public class PlayerController : MonoBehaviour
 
     [Header("Crouch Settings")]
     [SerializeField] private float crouchHeight = 0.5f;
-    [SerializeField] private float standingHeight = 1.8f;
+    [SerializeField] private float standingHeight = 1.8f;                                                                               
     [SerializeField] private Vector3 crouchCenter = new Vector3(0, 0.25f, 0);
     [SerializeField] private Vector3 standingCenter = new Vector3(0, 0.9f, 0);
     [SerializeField] private float crouchTransitionSpeed = 5f;
@@ -23,7 +24,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float cameraMinYAngle = -80f;
 
     [Header("Ground Check Settings")]
-    [SerializeField] private float groundCheckDistance = 0.2f;
+    [SerializeField] private Transform groundCheckPoint; // Punto de referencia para los pies
+    [SerializeField] private float groundCheckRadius = 0.2f; // Radio de la esfera de detección
     [SerializeField] private LayerMask groundLayer;
 
     [Header("Idle Animation Settings")]
@@ -77,7 +79,7 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         CheckGroundStatus();
-        jumpInput = Input.GetKeyDown(KeyCode.Space);
+        jumpInput = Input.GetButtonDown("Jump");
         HandleCrouch();
         HandleRotation();
         HandleCameraRotation();
@@ -86,14 +88,12 @@ public class PlayerController : MonoBehaviour
 
         playerCollider.height = Mathf.Lerp(playerCollider.height, targetHeight, crouchTransitionSpeed * Time.deltaTime);
         playerCollider.center = Vector3.Lerp(playerCollider.center, targetCenter, crouchTransitionSpeed * Time.deltaTime);
-
+        
         if (Input.GetKeyDown(KeyCode.G))
         {
             PowerUpThrow(); // Llama a la función para lanzar el powerup
         }
-
     }
-
     void FixedUpdate()
     {
         Move();
@@ -102,15 +102,18 @@ public class PlayerController : MonoBehaviour
 
     void CheckGroundStatus()
     {
-        // Calcula el punto más bajo del collider
-        float bottomOfCollider = playerCollider.bounds.min.y;
-        Vector3 rayStart = new Vector3(transform.position.x, bottomOfCollider + playerCollider.radius, transform.position.z);
+        if (groundCheckPoint == null)
+        {
+            Debug.LogError("GroundCheckPoint no está asignado en el Inspector!");
+            return;
+        }
 
-        // Dispara un raycast hacia abajo
-        isGrounded = Physics.Raycast(rayStart, Vector3.down, groundCheckDistance, groundLayer);
+        // Usamos OverlapSphere para detectar suelo de manera más precisa
+        isGrounded = Physics.OverlapSphere(groundCheckPoint.position, groundCheckRadius, groundLayer).Length > 0;
 
-        // Opcional: Dibuja el raycast en el editor para debug
-        Debug.DrawRay(rayStart, Vector3.down * groundCheckDistance, isGrounded ? Color.green : Color.red);
+        // Debug visual en el Editor
+        Debug.DrawRay(groundCheckPoint.position, Vector3.down * groundCheckRadius,
+                     isGrounded ? Color.green : Color.red);
     }
 
     void Move()
@@ -185,15 +188,16 @@ public class PlayerController : MonoBehaviour
         if (isCrouching)
         {
             speed = crouchWalkSpeed;
+            // Solo activa IsWalkingCrouched si realmente se está moviendo
             animator.SetBool("IsWalkingCrouched", Mathf.Abs(currentSpeed) > 0.1f);
-            animator.SetBool("IsRunning", false); // Asegura que no se active running mientras está agachado
+            animator.SetBool("IsRunning", false);
         }
         else
         {
             bool isRunning = Input.GetKey(KeyCode.LeftShift) && (!aimThrowController || !aimThrowController.IsAiming);
             speed = isRunning ? runSpeed : walkSpeed;
-            animator.SetBool("IsRunning", isRunning);
-            animator.SetBool("IsWalkingCrouched", false); // Asegura que no se active caminar agachado cuando esta de pie
+            animator.SetBool("IsRunning", isRunning && Mathf.Abs(currentSpeed) > 0.1f);
+            animator.SetBool("IsWalkingCrouched", false);
         }
     }
 
@@ -226,13 +230,16 @@ public class PlayerController : MonoBehaviour
     {
         if (jumpInput && isGrounded && !isCrouching && (!aimThrowController || !aimThrowController.IsAiming))
         {
-            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-            isGrounded = false;
-            jumpInput = false;
+            // Cancelar gravedad acumulada
+            rb.AddForce(-Physics.gravity * rb.mass, ForceMode.Force);
+
+            // Aplicar salto
+            rb.AddForce(Vector3.up * jumpForce, ForceMode.VelocityChange);
+
             animator.SetTrigger("JumpTrigger");
+            isGrounded = false;
         }
     }
-
     void PowerUpThrow()
     {
         int count = InventoryManager.Instance.GetPowerUpCount(powerUpName);
@@ -254,6 +261,12 @@ public class PlayerController : MonoBehaviour
         animator.SetFloat("Speed", Mathf.Abs(currentSpeed));
         animator.SetBool("IsGrounded", isGrounded);
 
+        // Añade esta línea para asegurarte de que IsWalkingCrouched se desactiva cuando no hay movimiento
+        if (Mathf.Abs(currentSpeed) < 0.1f)
+        {
+            animator.SetBool("IsWalkingCrouched", false);
+        }
+
         if (currentRotation > 0.1f)
         {
             animator.SetBool("TurningRight", true);
@@ -272,7 +285,14 @@ public class PlayerController : MonoBehaviour
             animator.SetBool("TurningLeft", false);
         }
     }
-
+    void OnDrawGizmosSelected()
+    {
+        if (groundCheckPoint != null)
+        {
+            Gizmos.color = isGrounded ? Color.green : Color.red;
+            Gizmos.DrawWireSphere(groundCheckPoint.position, groundCheckRadius);
+        }
+    }
     void ResetIdleState()
     {
         idleTimer = 0f;
@@ -280,23 +300,6 @@ public class PlayerController : MonoBehaviour
         {
             animator.ResetTrigger(idle2AnimationTrigger);
             isInIdle2 = false;
-        }
-    }
-
-    void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject.CompareTag("Ground"))
-        {
-            isGrounded = true;
-        }
-        
-    }
-
-    void OnCollisionExit(Collision collision)
-    {
-        if (collision.gameObject.CompareTag("Ground"))
-        {
-            isGrounded = false;
         }
     }
 }
