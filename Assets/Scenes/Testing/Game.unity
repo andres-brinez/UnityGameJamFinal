@@ -157,7 +157,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1652587128212453115, guid: 563f1ed5af4c4c343bf57372752357c0, type: 3}
       propertyPath: ShoulderOffset.x
-      value: 0.33
+      value: 0.3300001
       objectReference: {fileID: 0}
     - target: {fileID: 1652587128212453115, guid: 563f1ed5af4c4c343bf57372752357c0, type: 3}
       propertyPath: DampingIntoCollision
@@ -254,6 +254,10 @@ PrefabInstance:
     - target: {fileID: 8797757289799540832, guid: 563f1ed5af4c4c343bf57372752357c0, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 18
+      objectReference: {fileID: 0}
+    - target: {fileID: 9001194162458286086, guid: 563f1ed5af4c4c343bf57372752357c0, type: 3}
+      propertyPath: m_Material
+      value: 
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2322,6 +2326,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 46743907319945961, guid: b957c702003ce354eb899fd1578bfef2, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 191137786132868597, guid: b957c702003ce354eb899fd1578bfef2, type: 3}
       propertyPath: m_Name
       value: ManCharacter

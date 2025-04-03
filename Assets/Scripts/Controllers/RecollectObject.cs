@@ -1,12 +1,16 @@
 using UnityEngine;
 using System.Collections;
+using static UnityEngine.Rendering.PostProcessing.SubpixelMorphologicalAntialiasing;
 
-public class CollectableItem : MonoBehaviour
+public class RecollectObject : MonoBehaviour
 {
     [Header("Configuración Básica")]
     public string itemName;
     public GameObject pickupText;
     public string collectAnimationName = "Pickup";
+
+    [Header("Cantidad")]
+    public int quantity = 1;
 
     [Header("Tiempos")]
     public float animationDelay = 0.5f; // Tiempo antes de empezar animación
@@ -75,34 +79,26 @@ public class CollectableItem : MonoBehaviour
     {
         isCollecting = true;
 
-        // 1. Desactivar el texto de recolección
         if (pickupText != null)
         {
             pickupText.SetActive(false);
         }
 
-        // 2. Desactivar el movimiento del jugador
         targetController.enabled = false;
 
-        // Pequeña pausa antes de la animación (opcional)
         yield return new WaitForSeconds(animationDelay);
 
-        // 3. Reproducir la animación de recolección
         if (targetAnimator != null)
         {
             targetAnimator.Play(collectAnimationName);
-
-            // Esperar a que la animación termine
             yield return new WaitForSeconds(GetAnimationLength(targetAnimator, collectAnimationName));
         }
 
-        // Pequeña pausa después de la animación (opcional)
         yield return new WaitForSeconds(postAnimationDelay);
 
-        // 4. (OPCIONAL) Añadir el objeto al inventario
-        //InventoryManager.instance.AddItem(itemName);
+        // Modificado para usar la cantidad configurada
+        InventoryManager.Instance.AddPowerUp(itemName, quantity);
 
-        // 5. Reactivar el movimiento del jugador y desactivar el objeto
         targetController.enabled = true;
         gameObject.SetActive(false);
 
