@@ -78,7 +78,7 @@ public class RecollectObject : MonoBehaviour
     private IEnumerator CollectItemRoutine(Animator targetAnimator, PlayerController targetController)
     {
         isCollecting = true;
-
+        
         if (pickupText != null)
         {
             pickupText.SetActive(false);
@@ -95,7 +95,7 @@ public class RecollectObject : MonoBehaviour
         }
 
         yield return new WaitForSeconds(postAnimationDelay);
-
+        LevelManager.instance.CollectPotion();
         // Modificado para usar la cantidad configurada
         InventoryManager.Instance.AddPowerUp(itemName, quantity);
 

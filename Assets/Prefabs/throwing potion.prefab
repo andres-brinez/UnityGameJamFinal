@@ -64,8 +64,8 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 6709170938499032525, guid: 035be7cf5fa22c6488d550f3b38dfdbf, type: 3}
   - {fileID: 2100000, guid: 34591b5281ee2f84eade91402f1a6ada, type: 2}
+  - {fileID: 6709170938499032525, guid: 035be7cf5fa22c6488d550f3b38dfdbf, type: 3}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -209,7 +209,7 @@ GameObject:
   - component: {fileID: 4061516212086195267}
   - component: {fileID: 5481456098390390001}
   m_Layer: 0
-  m_Name: Pocion
+  m_Name: throwing potion
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -278,7 +278,7 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.046065815
+  m_Radius: 0.050804127
   m_Height: 0.14972498
   m_Direction: 1
-  m_Center: {x: 0.023371378, y: 0.06907821, z: -0.03791809}
+  m_Center: {x: 0.023371378, y: 0.06907821, z: -0.03413646}

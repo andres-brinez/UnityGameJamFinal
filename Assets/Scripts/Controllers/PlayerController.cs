@@ -40,7 +40,7 @@ public class PlayerController : MonoBehaviour
 
     public bool isGrounded = false;
     private bool jumpInput = false;
-    private bool isCrouching = false;
+    public bool isCrouching = false;
     public float currentSpeed;
     private float currentRotation;
     private float targetHeight;
@@ -52,6 +52,20 @@ public class PlayerController : MonoBehaviour
 
     private string powerUpName = "PowerUp1"; // Nombre del powerup (un solo tipo)
 
+    public static Transform PlayerTransform { get; private set; }
+
+    private void Awake()
+    {
+        // Asigna el Transform del jugador al iniciar
+        if (PlayerTransform == null)
+        {
+            PlayerTransform = transform;
+        }
+        else
+        {
+            Debug.LogWarning("¡Ya existe un Transform de jugador asignado!");
+        }
+    }
 
     void Start()
     {
