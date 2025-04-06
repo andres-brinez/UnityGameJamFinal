@@ -41,7 +41,7 @@ public class InventoryManager : MonoBehaviour
         }
         else
         {
-            // Si no está, se agrega al inventario con la cantidad especificada
+            // Si no esta, se agrega al inventario con la cantidad especificada
             inventory.Add(powerUpName, quantity);
         }
 

@@ -105,7 +105,7 @@ public class PlayerController : MonoBehaviour
         
         if (Input.GetKeyDown(KeyCode.G))
         {
-            PowerUpThrow(); // Llama a la función para lanzar el powerup
+            PowerUpThrow(); // Llama a la funcion para lanzar el powerup
         }
     }
     void FixedUpdate()
@@ -122,7 +122,7 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-        // Usamos OverlapSphere para detectar suelo de manera más precisa
+        // Usamos OverlapSphere para detectar suelo de manera mas precisa
         isGrounded = Physics.OverlapSphere(groundCheckPoint.position, groundCheckRadius, groundLayer).Length > 0;
 
         // Debug visual en el Editor

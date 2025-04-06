@@ -10,6 +10,7 @@ public class EnemyAI : MonoBehaviour
     public float attackRange = 2f;
     public float stoppingDistance = 1.5f;
     public LayerMask playerLayer;
+    public LayerMask obstacleLayer;
 
     [Header("Movement Settings")]
     public float patrolSpeed = 4f;
@@ -17,8 +18,8 @@ public class EnemyAI : MonoBehaviour
     public float rotationSpeed = 10f;
 
     [Header("Braking System")]
-    public float brakingDistance = 5f; 
-    public float brakingSharpness = 2f; 
+    public float brakingDistance = 5f;
+    public float brakingSharpness = 2f;
 
     [Header("Waypoint Patrol")]
     public List<Transform> waypoints;
@@ -31,6 +32,13 @@ public class EnemyAI : MonoBehaviour
     [Header("Confusion Settings")]
     public float confusionDuration = 3f;
     public Animator enemyAnimator;
+    public string confusedAnimationParam = "IsConfused";
+
+    [Header("Flashlight Confusion")]
+    public float flashlightConfusionDuration = 5f;
+    public float flashlightDetectionAngle = 45f;
+    public float flashlightDetectionDistance = 15f;
+    public float minFlashlightConfusionCooldown = 10f;
 
     private NavMeshAgent agent;
     private Animator animator;
@@ -41,16 +49,20 @@ public class EnemyAI : MonoBehaviour
     private bool playerIsHiding;
     private bool wasPlayerHidingLastFrame;
     private bool isConfused;
+    private bool isFlashlightConfused;
+    private float lastFlashlightConfusionTime;
+    private FlashlightController flashlightController;
 
-    void Start()
+    private void Start()
     {
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
 
         agent.speed = patrolSpeed;
         agent.angularSpeed = 360f;
-        agent.stoppingDistance = 0; // Control manual
+        agent.stoppingDistance = 0;
 
+        flashlightController = FindFirstObjectByType<FlashlightController>();
         StartCoroutine(WaitForPlayer());
 
         if (waypoints.Count > 0)
@@ -64,8 +76,23 @@ public class EnemyAI : MonoBehaviour
         wasPlayerHidingLastFrame = playerIsHiding;
         CheckIfPlayerIsHiding();
 
-        // Solo detecta al jugador si NO está escondido
-        bool playerDetected = Physics.CheckSphere(transform.position, detectionRange, playerLayer) && !playerIsHiding;
+        // Verificar si la linterna está afectando al enemigo
+        if (!isFlashlightConfused && !isConfused &&
+            Time.time > lastFlashlightConfusionTime + minFlashlightConfusionCooldown &&
+            IsPlayerFlashlightShiningOnEnemy())
+        {
+            StartCoroutine(FlashlightConfusionRoutine());
+        }
+
+        // Solo detecta al jugador si:
+        // 1. Está dentro del rango de detección
+        // 2. No esta escondido
+        // 3. No esta confundido por la linterna
+        // 4. No esta en estado de confusión normal
+        bool playerDetected = Physics.CheckSphere(transform.position, detectionRange, playerLayer)
+                            && !playerIsHiding
+                            && !isFlashlightConfused
+                            && !isConfused;
 
         if (playerDetected)
         {
@@ -78,11 +105,12 @@ public class EnemyAI : MonoBehaviour
         }
         else if (isChasing)
         {
-            if (playerIsHiding && !wasPlayerHidingLastFrame)
+            // Si el jugador se esconde y no estaba escondido en el frame anterior
+            if (playerIsHiding && !wasPlayerHidingLastFrame && !isFlashlightConfused)
             {
                 StartCoroutine(PlayConfusionAndReturnToPatrol());
             }
-            else
+            else if (!isFlashlightConfused && !isConfused)
             {
                 StartCoroutine(ReturnToPatrol());
             }
@@ -91,6 +119,57 @@ public class EnemyAI : MonoBehaviour
         {
             Patrol();
         }
+
+        UpdateAnimationParameters();
+    }
+
+    private void UpdateAnimationParameters()
+    {
+        // Solo actualizar animaciones si no está confundido
+        if (!isConfused && !isFlashlightConfused)
+        {
+            bool shouldWalk = agent.velocity.magnitude > 0.1f && agent.remainingDistance > agent.stoppingDistance;
+            animator.SetBool("isWalking", shouldWalk);
+        }
+    }
+
+    private bool IsPlayerFlashlightShiningOnEnemy()
+    {
+        if (flashlightController == null || !flashlightController.IsFlashlightOn)
+            return false;
+
+        Vector3 directionToEnemy = transform.position - player.position;
+        float distance = directionToEnemy.magnitude;
+        float angle = Vector3.Angle(player.forward, directionToEnemy.normalized);
+
+        // Verifica si está dentro del ángulo y distancia de detección
+        if (distance <= flashlightDetectionDistance && angle <= flashlightDetectionAngle)
+        {
+            // Raycast para verificar si hay obstáculos
+            if (!Physics.Raycast(player.position, directionToEnemy.normalized, distance, obstacleLayer))
+            {
+                Debug.DrawLine(player.position, transform.position, Color.yellow, 0.1f);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private IEnumerator FlashlightConfusionRoutine()
+    {
+        isFlashlightConfused = true;
+        lastFlashlightConfusionTime = Time.time;
+        enemyAnimator.SetBool(confusedAnimationParam, true);
+        agent.isStopped = true;
+
+        // AudioManager.Instance.PlaySFX("enemy_flashlight_confused");
+
+        yield return new WaitForSeconds(flashlightConfusionDuration);
+
+        enemyAnimator.SetBool(confusedAnimationParam, false);
+        isFlashlightConfused = false;
+
+        ForceReturnToPatrol();
     }
 
     private void CheckIfPlayerIsHiding()
@@ -108,36 +187,36 @@ public class EnemyAI : MonoBehaviour
             }
         }
     }
+
     private void ForceReturnToPatrol()
     {
-        StopAllCoroutines(); // Detiene cualquier retorno a patrulla en progreso
+        StopAllCoroutines();
         isChasing = false;
         agent.speed = patrolSpeed;
+        agent.isStopped = false;
         GoToRandomWaypoint();
     }
+
     private IEnumerator PlayConfusionAndReturnToPatrol()
     {
-        // Entrar en estado de confusión
         isConfused = true;
-        enemyAnimator.SetBool("IsConfused", true);
+        enemyAnimator.SetBool(confusedAnimationParam, true);
         agent.isStopped = true;
 
-        // Reproducir sonido de confusion
         // AudioManager.Instance.PlaySFX("enemy_confused");
 
-        // Esperar la duración de la animación
         yield return new WaitForSeconds(confusionDuration);
 
-        // Salir del estado de confusión
-        enemyAnimator.SetBool("IsConfused", false);
+        enemyAnimator.SetBool(confusedAnimationParam, false);
         isConfused = false;
 
-        // Volver a patrullar
         ForceReturnToPatrol();
     }
+
     private void ChasePlayer()
     {
-        if (isConfused) return;
+        if (isConfused || isFlashlightConfused) return;
+
         float distanceToPlayer = Vector3.Distance(transform.position, player.position);
 
         // Sistema de frenado progresivo
@@ -151,17 +230,15 @@ public class EnemyAI : MonoBehaviour
             agent.speed = chaseSpeed;
         }
 
-        // Movimiento y detencion
+        // Movimiento y detención
         if (distanceToPlayer > stoppingDistance)
         {
             agent.isStopped = false;
             agent.SetDestination(player.position);
-            animator.SetBool("isWalking", true);
         }
         else
         {
             agent.isStopped = true;
-            animator.SetBool("isWalking", false);
         }
 
         LookAtPlayer();
@@ -179,16 +256,16 @@ public class EnemyAI : MonoBehaviour
 
     private void AttackPlayer()
     {
-        if (isConfused) return;
+        if (isConfused || isFlashlightConfused) return;
         animator.SetBool("IsAttacking", true);
     }
 
     private void Patrol()
     {
+        if (isConfused || isFlashlightConfused) return;
+
         agent.speed = patrolSpeed;
         agent.isStopped = false;
-        animator.SetBool("isWalking", true);
-        animator.SetBool("IsAttacking", false);
 
         if (agent.remainingDistance <= agent.stoppingDistance)
         {
@@ -245,8 +322,21 @@ public class EnemyAI : MonoBehaviour
 
     private IEnumerator WaitForPlayer()
     {
-        yield return new WaitUntil(() => GameObject.FindGameObjectWithTag("Player") != null);
-        player = GameObject.FindGameObjectWithTag("Player").transform;
+        GameObject playerObj = null;
+        while (playerObj == null)
+        {
+            playerObj = GameObject.FindWithTag("Player");
+            if (playerObj != null)
+            {
+                player = playerObj.transform;
+                // Asegurarnos de tener la referencia al flashlightController
+                if (flashlightController == null)
+                {
+                    flashlightController = player.GetComponentInChildren<FlashlightController>(true);
+                }
+            }
+            yield return null;
+        }
     }
 
     void OnDrawGizmosSelected()
@@ -255,12 +345,16 @@ public class EnemyAI : MonoBehaviour
         Gizmos.color = new Color(1, 0, 0, 0.2f);
         Gizmos.DrawSphere(transform.position, detectionRange);
 
-        // Zona de frenado (amarillo)
+        // Zona de frenado
         Gizmos.color = new Color(1, 1, 0, 0.3f);
         Gizmos.DrawSphere(transform.position, brakingDistance);
 
-        // Stopping distance (verde)
+        // Stopping distance
         Gizmos.color = new Color(0, 1, 0, 0.3f);
         Gizmos.DrawSphere(transform.position, stoppingDistance);
+
+        // Flashlight detection
+        Gizmos.color = new Color(0, 0.5f, 1, 0.2f);
+        Gizmos.DrawSphere(transform.position, flashlightDetectionDistance);
     }
 }

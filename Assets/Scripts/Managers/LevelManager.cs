@@ -38,9 +38,13 @@ public class LevelManager : MonoBehaviour
 
     void Start()
     {
-        // Contar todas las pociones en la escena
-        totalPotions = GameObject.FindGameObjectsWithTag("Potion").Length;
+        // Contar solo las pociones en la escena objetos con tag "Potion"
+        GameObject[] potions = GameObject.FindGameObjectsWithTag("Potion");
+        totalPotions = potions.Length;
         UpdatePotionUI();
+
+        // Verificación de debug
+        Debug.Log("Total de pociones encontradas: " + totalPotions);
     }
 
     public void CollectPotion()
@@ -53,6 +57,7 @@ public class LevelManager : MonoBehaviour
             SpawnPortal();
         }
     }
+
     void UpdatePotionUI()
     {
         if (potionCounterText != null)
@@ -60,7 +65,7 @@ public class LevelManager : MonoBehaviour
             int remaining = totalPotions - collectedPotions;
             potionCounterText.text = $"Pociones restantes: {remaining}";
 
-            // Opcional: Cambiar color cuando quedan pocas
+            // Cambiar color cuando quedan pocas
             if (remaining <= 3)
             {
                 potionCounterText.color = Color.yellow;
@@ -71,6 +76,7 @@ public class LevelManager : MonoBehaviour
             }
         }
     }
+
     void SpawnPortal()
     {
         if (currentPortal == null && portalPrefab != null && portalSpawnPoint != null)
@@ -84,10 +90,9 @@ public class LevelManager : MonoBehaviour
     {
         if (player != null)
         {
-            // Desactivar player
             player.SetActive(false);
 
-            // Mover player a la nueva posición
+            // Mover player a la nueva posicion en la que estara contra el jefe
             player.transform.position = destinationSpawnPoint.position;
             player.transform.rotation = destinationSpawnPoint.rotation;
 

@@ -1,10 +1,10 @@
 ﻿using UnityEngine;
 
-public class NonRotatingMinimapIndicator : MonoBehaviour
+public class MinimapIndicator : MonoBehaviour
 {
     [Header("Referencias")]
-    public Transform target;          // Objeto a rastrear (poción, enemigo, etc.)
-    public Transform player;         // Jugador (centro de referencia)
+    public Transform target;          // Objeto a rastrear
+    public Transform player;         // Jugador 
     public SpriteRenderer indicatorRenderer; // SpriteRenderer del indicador
     public Camera minimapCamera;     // Cámara del minimapa
     public RectTransform minimapCircle; // RectTransform del minimapa circular (UI)
@@ -23,6 +23,7 @@ public class NonRotatingMinimapIndicator : MonoBehaviour
 
     void Start()
     {
+        player = PlayerController.PlayerTransform;
         originalScale = indicatorRenderer.transform.localScale;
         originalRotation = indicatorRenderer.transform.eulerAngles; // Rotación inicial
     }
@@ -52,7 +53,7 @@ public class NonRotatingMinimapIndicator : MonoBehaviour
             Mathf.Sin(angle) * 0.5f * edgePadding
         );
 
-        // 5. Convierte a posición de mundo (conservando la altura original)
+        // 5. Convierte a posicion del mundo (conservando la altura original)
         Vector3 finalWorldPos = minimapCamera.ViewportToWorldPoint(
             new Vector3(edgeViewportPos.x, edgeViewportPos.y, viewportPos.z)
         );
@@ -68,7 +69,7 @@ public class NonRotatingMinimapIndicator : MonoBehaviour
             indicatorRenderer.color = edgeColor;
             indicatorRenderer.transform.localScale = originalScale * edgeScale;
 
-            // 🔄 Mantiene la rotación original (no rota)
+            // Mantiene la rotación original (no rota)
             indicatorRenderer.transform.eulerAngles = originalRotation;
         }
         else
@@ -77,7 +78,7 @@ public class NonRotatingMinimapIndicator : MonoBehaviour
             indicatorRenderer.transform.position = target.position;
             indicatorRenderer.color = normalColor;
             indicatorRenderer.transform.localScale = originalScale;
-            indicatorRenderer.transform.eulerAngles = originalRotation; // Opcional: mantener rotación
+            indicatorRenderer.transform.eulerAngles = originalRotation; // mantener rotación
         }
     }
 }

@@ -20,7 +20,7 @@ public class HealthBar : MonoBehaviour
     public float regenerationDelay = 5f;
     public float regenerationRate = 10f;
     private float timeSinceLastDamage = 0f;
-    private bool isRegenerating = false;
+    public bool isRegenerating = false;
 
     [Header("References")]
     public Animator barAnimator;

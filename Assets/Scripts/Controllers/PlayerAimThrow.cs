@@ -258,14 +258,26 @@ public class PlayerAimThrow : MonoBehaviour
         Vector3 previousPoint = startPosition;
         points.Add(previousPoint);
 
+        bool hitEnemy = false;
+        int enemyLayerMask = 1 << 8; // Capa 8 = Enemy
+
         for (float t = 0; t <= simulationTime; t += trajectoryUpdateInterval)
         {
             Vector3 point = startPosition + startVelocity * t + 0.5f * Physics.gravity * t * t;
             points.Add(point);
 
-            if (Physics.Linecast(previousPoint, point, out RaycastHit hit))
+            // Detección de enemigos (capa 8)
+            if (Physics.Linecast(previousPoint, point, out RaycastHit hit, enemyLayerMask))
             {
                 points[points.Count - 1] = hit.point;
+                hitEnemy = true;
+                break;
+            }
+
+            // Detección de otros objetos (opcional)
+            if (Physics.Linecast(previousPoint, point, out RaycastHit defaultHit))
+            {
+                points[points.Count - 1] = defaultHit.point;
                 break;
             }
 
@@ -274,6 +286,16 @@ public class PlayerAimThrow : MonoBehaviour
 
         trajectoryLine.positionCount = points.Count;
         trajectoryLine.SetPositions(points.ToArray());
+
+        // Cambia el color solo si choca con enemigo
+        if (hitEnemy)
+        {
+            trajectoryLine.material.color = Color.red; // Rojo al chocar
+        }
+        else
+        {
+            trajectoryLine.material.color = Color.white; // Blanco por defecto
+        }
     }
 
     void ExecuteThrow()
