@@ -90,6 +90,13 @@ public class PlayerAimThrow : MonoBehaviour
 
     void HandleAiming()
     {
+        // Solo permitir apuntar si hay frascos disponibles
+        if (InventoryManager.Instance.GetPowerUpCount("Frasco") <= 0)
+        {
+            if (IsAiming) StopAiming();
+            return;
+        }
+
         if (Input.GetMouseButtonDown(1))
         {
             StartAiming();
@@ -110,7 +117,6 @@ public class PlayerAimThrow : MonoBehaviour
             StopAiming();
         }
     }
-
     void HandleDynamicAim()
     {
         float mouseY = Input.GetAxis("Mouse Y") * aimSensitivity;
@@ -272,13 +278,25 @@ public class PlayerAimThrow : MonoBehaviour
 
     void ExecuteThrow()
     {
+        // Verificar frascos disponibles
+        if (InventoryManager.Instance.GetPowerUpCount("Frasco") <= 0)
+        {
+            Debug.Log("No hay frascos disponibles para lanzar");
+            return;
+        }
+
         if (projectilePrefab == null || throwPoint == null) return;
 
+        // Lanzar el frasco
         GameObject projectile = Instantiate(projectilePrefab, throwPoint.position, Quaternion.identity);
         Rigidbody rb = projectile.GetComponent<Rigidbody>();
         Vector3 throwDirection = CalculateThrowDirection();
 
         projectile.transform.rotation = Quaternion.LookRotation(throwDirection);
         rb.AddForce(throwDirection * currentThrowForce, ForceMode.Impulse);
+
+        // Restar un frasco del inventario
+        InventoryManager.Instance.RemovePowerUp("Frasco");
+
     }
 }

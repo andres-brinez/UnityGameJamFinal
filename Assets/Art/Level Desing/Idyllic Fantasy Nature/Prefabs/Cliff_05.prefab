@@ -182,7 +182,8 @@ GameObject:
   m_Component:
   - component: {fileID: 3767358828197824251}
   - component: {fileID: 3767358828197824250}
-  - component: {fileID: 2624323903473310110}
+  - component: {fileID: 600466870566898191}
+  - component: {fileID: 7217228473087298942}
   m_Layer: 6
   m_Name: Cliff_05
   m_TagString: Ground
@@ -235,14 +236,14 @@ LODGroup:
     renderers:
     - renderer: {fileID: 3767358826947127236}
   m_Enabled: 1
---- !u!65 &2624323903473310110
-BoxCollider:
+--- !u!64 &600466870566898191
+MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3767358828197824249}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 06164bfd0febbaf4ab3c7a10d37cd8ba, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -253,9 +254,26 @@ BoxCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -8860137987800619769, guid: 188399d292f9b9f4eaf483238be7bc14, type: 3}
+--- !u!208 &7217228473087298942
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3767358828197824249}
+  m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 11.482031, y: 2.8788104, z: 5.4819603}
-  m_Center: {x: 0, y: -0.06551385, z: -0.07882643}
+  m_Shape: 1
+  m_Extents: {x: 0.5, y: 0.5, z: 0.5}
+  m_MoveThreshold: 0.1
+  m_Carve: 0
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!1 &3767358828263198984
 GameObject:
   m_ObjectHideFlags: 0

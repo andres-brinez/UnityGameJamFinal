@@ -272,6 +272,7 @@ GameObject:
   - component: {fileID: 7431965296121804088}
   - component: {fileID: 2412164301211058761}
   - component: {fileID: 7132444530344582082}
+  - component: {fileID: 7985171997468000854}
   m_Layer: 7
   m_Name: Fir_04
   m_TagString: Untagged
@@ -347,3 +348,19 @@ CapsuleCollider:
   m_Height: 7
   m_Direction: 1
   m_Center: {x: 0, y: 3.53, z: 0}
+--- !u!208 &7985171997468000854
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7811622897032540034}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 0
+  m_Extents: {x: 0.5, y: 0.5, z: 0.5}
+  m_MoveThreshold: 0.1
+  m_Carve: 0
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 0.5

@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Ground
   - DamageObject
+  - Enemy
   layers:
   - Default
   - TransparentFX
@@ -15,7 +16,7 @@ TagManager:
   - UI
   - Ground
   - Obstacle
-  - 
+  - Enemy
   - 
   - 
   - 

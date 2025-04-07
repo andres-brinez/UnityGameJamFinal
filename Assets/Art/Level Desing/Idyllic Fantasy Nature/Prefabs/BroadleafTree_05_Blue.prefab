@@ -273,6 +273,7 @@ GameObject:
   - component: {fileID: 4286858591585796297}
   - component: {fileID: 6442205492465566679}
   - component: {fileID: 3885260906792066857}
+  - component: {fileID: -1496135441955896440}
   m_Layer: 7
   m_Name: BroadleafTree_05_Blue
   m_TagString: Untagged
@@ -371,3 +372,19 @@ CapsuleCollider:
   m_Height: 2.41
   m_Direction: 1
   m_Center: {x: -0.3, y: 2.38, z: 0}
+--- !u!208 &-1496135441955896440
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8533252744133438722}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 0
+  m_Extents: {x: 0.5, y: 0.5, z: 0.5}
+  m_MoveThreshold: 0.1
+  m_Carve: 0
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 0.5

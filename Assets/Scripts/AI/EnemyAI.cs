@@ -5,95 +5,98 @@ using System.Collections;
 public class EnemyAI : MonoBehaviour
 {
     [Header("Player Detection")]
-    public Transform player;
     public float detectionRange = 12f;
+    public float attackRange = 2f;
+    public LayerMask playerLayer;
 
-    [Header("Movement Speeds")]
+    [Header("Movement Settings")]
     public float patrolSpeed = 40f;
     public float chaseSpeed = 50f;
+    public float rotationSpeed = 5f;
+
+    [Header("Braking System")]
+    public float brakingDistance = 3f;
+    public float brakingSharpness = 2f;
 
     [Header("Patrol Settings")]
     public float patrolRadius = 13f;
     public float patrolDelay = 6f;
-    private float patrolTimer = 0f;
-
-    [Header("Chase Settings")]
-    public float stoppingDistance = 1f;
 
     private NavMeshAgent agent;
-    private bool isChasing = false;
-
     private Animator animator;
+    private Transform player;
+    private bool isChasing;
+    private float patrolTimer;
 
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
-        agent.speed = patrolSpeed;
-        agent.stoppingDistance = 0f;
-
         animator = GetComponent<Animator>();
-
-        if (animator == null) { Debug.LogError("No se encontró el componente Animator en el enemigo."); }
-
-        animator.SetBool("isWalking", true);
-
-        SetRandomDestination();  // Empieza el patrullaje con destino aleatorio
-
-        StartCoroutine(WaitForCanvasToDisable());
-
+        agent.speed = patrolSpeed;
+        agent.angularSpeed = 360f; // Rotación rápida
+        StartCoroutine(WaitForPlayer());
     }
 
     void Update()
     {
-        if(player == null) return; // Si el jugador no está asignado, no hace nada
-        float distanceToPlayer = Vector3.Distance(transform.position, player.position);
+        if (player == null) return;
 
-        // Si el jugador entra en el rango de detección, comienza a perseguirlo
-        if (distanceToPlayer <= detectionRange)
-        {
-            ChasePlayer();
-        }
-        else
-        {
-            Patrol();
-        }
+        bool playerDetected = Physics.CheckSphere(transform.position, detectionRange, playerLayer);
+
+        if (playerDetected) ChasePlayer();
+        else if (isChasing) StartCoroutine(ReturnToPatrol(1.5f));
+        else Patrol();
     }
 
-    IEnumerator WaitForCanvasToDisable()
+    private void ChasePlayer()
     {
-        GameObject canvasSelection = GameObject.Find("CanvasSelection"); 
-
-        if (canvasSelection != null)
+        if (!isChasing)
         {
-            while (canvasSelection.activeSelf) // Mientras el canvas esté activo, espera
-            {
-                yield return null;
-            }
+            isChasing = true;
+            agent.speed = chaseSpeed;
+            animator.SetBool("isWalking", true);
         }
 
-        player = GameObject.FindGameObjectWithTag("Player")?.transform;
+        float distance = Vector3.Distance(transform.position, player.position);
 
-        if (player == null)
+        // Sistema de frenado progresivo
+        if (distance <= brakingDistance)
         {
-            Debug.LogError("No se encontró ningún jugador con la etiqueta 'Player'.");
+            float speedFactor = Mathf.Clamp01(distance / brakingDistance);
+            agent.speed = Mathf.Lerp(0.5f, chaseSpeed, speedFactor * brakingSharpness);
         }
         else
         {
-            Debug.Log("Jugador detectado: " + player.name);
-            
+            agent.speed = chaseSpeed;
         }
+
+        LookAtPlayer();
+
+        if (distance <= attackRange) AttackPlayer();
+        else KeepChasing();
     }
-    // 🔹 Lógica de patrullaje
+
+    private void AttackPlayer()
+    {
+        agent.isStopped = true;
+        animator.SetBool("isWalking", false);
+        animator.SetBool("IsAttacking", true);
+    }
+
+    private void KeepChasing()
+    {
+        agent.isStopped = false;
+        agent.SetDestination(player.position);
+        animator.SetBool("IsAttacking", false);
+    }
+
     private void Patrol()
     {
         if (isChasing)
         {
             isChasing = false;
             agent.speed = patrolSpeed;
-            agent.stoppingDistance = 0f;
-            agent.velocity = Vector3.zero;  // Detenemos la velocidad al patrullar
-
-
+            agent.isStopped = false;
         }
 
         patrolTimer += Time.deltaTime;
@@ -107,70 +110,58 @@ public class EnemyAI : MonoBehaviour
         animator.SetBool("IsAttacking", false);
     }
 
-    // 🔹 Persigue al jugador
-    private void ChasePlayer()
-    {
-        if (!isChasing)
-        {
-            isChasing = true;
-            agent.speed = chaseSpeed;
-            agent.stoppingDistance = stoppingDistance;
-
-            animator.SetBool("isWalking", false);
-            animator.SetBool("IsAttacking", true);
-        }
-
-        float distanceToTarget = Vector3.Distance(transform.position, player.position);
-
-        // Si está cerca del jugador (dentro del stoppingDistance), lo detiene
-        if (distanceToTarget <= stoppingDistance)
-        {
-            agent.velocity = Vector3.zero;  // Se detiene
-        }
-        else
-        {
-            agent.SetDestination(player.position);  // Sigue al jugador si está fuera de stoppingDistance
-        }
-
-        LookAtPlayer();
-    }
-
-    // 🔹 Genera un punto aleatorio dentro del radio de patrullaje
-    private void SetRandomDestination()
-    {
-        Vector3 randomPoint = RandomNavSphere(transform.position, patrolRadius);
-        agent.SetDestination(randomPoint);  // Asigna un destino aleatorio dentro del radio de patrullaje
-    }
-
-    // 🔹 Encuentra un punto aleatorio en el NavMesh dentro de un radio
-    private Vector3 RandomNavSphere(Vector3 origin, float distance)
-    {
-        Vector2 randomDirection = Random.insideUnitCircle * distance;
-        Vector3 finalPosition = new Vector3(origin.x + randomDirection.x, origin.y, origin.z + randomDirection.y);
-
-        if (NavMesh.SamplePosition(finalPosition, out NavMeshHit hit, distance, NavMesh.AllAreas))
-        {
-            return hit.position;  // Devuelve una posición válida en el NavMesh
-        }
-
-        return origin; // Si no encuentra un punto válido, se queda en el mismo lugar
-    }
-
     private void LookAtPlayer()
     {
-        if (player == null) return;
-
         Vector3 direction = (player.position - transform.position).normalized;
-        direction.y = 0;  // Evita giros en el eje Y
-        Quaternion lookRotation = Quaternion.LookRotation(direction);
-        transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 5f);
+        direction.y = 0;
+
+        if (direction != Vector3.zero)
+        {
+            Quaternion targetRot = Quaternion.LookRotation(direction);
+            transform.rotation = Quaternion.Slerp(
+                transform.rotation,
+                targetRot,
+                rotationSpeed * Time.deltaTime * (isChasing ? 2f : 1f)
+            );
+        }
     }
-    // 🔹 Dibuja los rangos en la vista del editor
+
+    private IEnumerator ReturnToPatrol(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        if (!Physics.CheckSphere(transform.position, detectionRange, playerLayer))
+            Patrol();
+    }
+
+    private IEnumerator WaitForPlayer()
+    {
+        yield return new WaitUntil(() => GameObject.FindGameObjectWithTag("Player") != null);
+        player = GameObject.FindGameObjectWithTag("Player").transform;
+    }
+
+    private void SetRandomDestination()
+    {
+        Vector3 randomPoint = transform.position + Random.insideUnitSphere * patrolRadius;
+        if (NavMesh.SamplePosition(randomPoint, out NavMeshHit hit, patrolRadius, NavMesh.AllAreas))
+            agent.SetDestination(hit.position);
+    }
+
     void OnDrawGizmosSelected()
     {
+        // Rango de detección (rojo)
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, detectionRange);
+
+        // Radio de patrullaje (azul)
         Gizmos.color = Color.blue;
         Gizmos.DrawWireSphere(transform.position, patrolRadius);
+
+        // Rango de frenado (amarillo)
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, brakingDistance);
+
+        // Rango de ataque (verde)
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireSphere(transform.position, attackRange);
     }
 }

@@ -4,6 +4,8 @@ using System.Collections.Generic;
 public class InventoryManager : MonoBehaviour
 {
     public static InventoryManager Instance { get; private set; }
+    public delegate void InventoryChangedDelegate();
+    public event InventoryChangedDelegate OnInventoryChanged;
 
     //Diccionario para llevar la cantidad de cada tipo de powerup
     [SerializeField]  private Dictionary<string, int> inventory = new Dictionary<string, int>();
@@ -24,7 +26,7 @@ public class InventoryManager : MonoBehaviour
         }
     }
 
-    public void AddPowerUp(string powerUpName)
+    public void AddPowerUp(string powerUpName, int quantity = 1)  // Cambiado para aceptar cantidad
     {
         if (string.IsNullOrEmpty(powerUpName))
         {
@@ -34,21 +36,20 @@ public class InventoryManager : MonoBehaviour
 
         if (inventory.ContainsKey(powerUpName))
         {
-            // Si el powerup ya está en el inventario, solo aumenta su contador
-            inventory[powerUpName]++;
+            // Si el powerup ya está en el inventario, aumenta su contador
+            inventory[powerUpName] += quantity;  // Suma la cantidad especificada
         }
         else
         {
-            // Si no está, se agrega al inventario con un contador inicial de 1
-            inventory.Add(powerUpName, 1);
-
+            // Si no está, se agrega al inventario con la cantidad especificada
+            inventory.Add(powerUpName, quantity);
         }
 
         UpdateTotalPowerUps();
+        OnInventoryChanged?.Invoke();
 
-        Debug.Log(powerUpName + " agregado al inventario. Cantidad: " + inventory[powerUpName]);
+        Debug.Log($"{quantity} {powerUpName}(s) agregado(s) al inventario. Total: {inventory[powerUpName]}");
     }
-
     public int GetPowerUpCount(string powerUpName)
     {
 
@@ -67,10 +68,11 @@ public class InventoryManager : MonoBehaviour
             inventory[powerUpName]--;
             if (inventory[powerUpName] <= 0)
             {
-                inventory.Remove(powerUpName); // se elimina si la cantidad llega a 0
+                inventory.Remove(powerUpName);
             }
 
             UpdateTotalPowerUps();
+            OnInventoryChanged?.Invoke(); // Esto notificará al InventoryUI
         }
     }
 

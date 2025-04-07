@@ -272,6 +272,7 @@ GameObject:
   - component: {fileID: 6028892609150849260}
   - component: {fileID: 1581029877147281309}
   - component: {fileID: 6755699070052488982}
+  - component: {fileID: 1653058619141358335}
   m_Layer: 7
   m_Name: BroadleafTree_01_Purple
   m_TagString: Untagged
@@ -347,3 +348,19 @@ CapsuleCollider:
   m_Height: 7.39
   m_Direction: 1
   m_Center: {x: 0, y: 3.7, z: 0}
+--- !u!208 &1653058619141358335
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6404467551117134422}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 0
+  m_Extents: {x: 0.5, y: 0.5, z: 0.5}
+  m_MoveThreshold: 0.1
+  m_Carve: 0
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 0.5
