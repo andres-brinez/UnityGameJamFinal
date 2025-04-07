@@ -148,7 +148,7 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 1753198273}
   m_Father: {fileID: 1050830718}
@@ -1403,6 +1403,38 @@ PrefabInstance:
       propertyPath: m_Name
       value: Menu
       objectReference: {fileID: 0}
+    - target: {fileID: 2425732570139069439, guid: b3681158d2430f846845669177750ce9, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -41
+      objectReference: {fileID: 0}
+    - target: {fileID: 2510290841013029796, guid: b3681158d2430f846845669177750ce9, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3227688582021000631, guid: b3681158d2430f846845669177750ce9, type: 3}
+      propertyPath: m_fontSize
+      value: 65
+      objectReference: {fileID: 0}
+    - target: {fileID: 3227688582021000631, guid: b3681158d2430f846845669177750ce9, type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: 0342675d5b3df8943917d904206c2c44, type: 2}
+    - target: {fileID: 3227688582021000631, guid: b3681158d2430f846845669177750ce9, type: 3}
+      propertyPath: m_fontSizeBase
+      value: 65
+      objectReference: {fileID: 0}
+    - target: {fileID: 3227688582021000631, guid: b3681158d2430f846845669177750ce9, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: -7758630317314654525, guid: 0342675d5b3df8943917d904206c2c44, type: 2}
+    - target: {fileID: 3227688582021000631, guid: b3681158d2430f846845669177750ce9, type: 3}
+      propertyPath: m_enableAutoSizing
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3227688582021000631, guid: b3681158d2430f846845669177750ce9, type: 3}
+      propertyPath: m_hasFontAssetChanged
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7033188996662054923, guid: b3681158d2430f846845669177750ce9, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -1675,8 +1707,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 56.2}
-  m_SizeDelta: {x: 166.3, y: 130}
+  m_AnchoredPosition: {x: 2.6, y: 43}
+  m_SizeDelta: {x: 88.6, y: 130}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1789884288
 MonoBehaviour:
@@ -1698,51 +1730,15 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'CREDITS
-
-
-    Andrea Riano
-
-    Artist 3D, VFX, Animator
-
-
-    Daniel
-    Valencia
-
-    Artist 3D, VFX, Documentation
-
-
-    Andres Brinez
-
-    Programer
-
-
-    David
-    Felipe Baquero
-
-    Game Programing, VFX
-
-
-    ASSETS
-
-    UNITY ASSSET STORE
-
-
-    MUSIC
-
-    Daniel
-    Valencia
-
-
-    OTHERS CREDITS...
-
-    .
-
-    .
-
-    .
-
-'
+  m_text: "CREDITS\n\nProject Information\nThis game was developed as a final project
+    for the Generation Colombia Bootcamp.\n\nDevelopment Team\n\nAndrea Riano\n3D
+    Artist  \xB7 Animator \xB7 UI design\n\nDaniel Valencia\n3D Artist \xB7 VFX \xB7
+    Documentation \xB7 Music\n\nAndres Brinez\nProgrammer\n\nDavid Felipe Baquero\nGame
+    Programming \xB7 VFX\n\nAssets Used\nUnity Asset Store\nMixamo\n\nSoftware Tools\nUnity
+    | Adobe Photoshop | Adobe Illustrator | Autodesk Maya |Blender | Substance |GitHub\n\n\nSpecial
+    Thanks\nTo our mentors, instructors, and everyone at Generation for their guidance
+    and support throughout this journey.\nAnd to our fellow bootcampers.\nwe made
+    it!\n"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: d0350139fc14bcc4f8dfda3debfd1cab, type: 2}
   m_sharedMaterial: {fileID: 549476215833533602, guid: d0350139fc14bcc4f8dfda3debfd1cab, type: 2}
