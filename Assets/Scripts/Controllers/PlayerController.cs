@@ -40,7 +40,7 @@ public class PlayerController : MonoBehaviour
 
     public bool isGrounded = false;
     private bool jumpInput = false;
-    private bool isCrouching = false;
+    public bool isCrouching = false;
     public float currentSpeed;
     private float currentRotation;
     private float targetHeight;
@@ -52,6 +52,20 @@ public class PlayerController : MonoBehaviour
 
     private string powerUpName = "PowerUp1"; // Nombre del powerup (un solo tipo)
 
+    public static Transform PlayerTransform { get; private set; }
+
+    private void Awake()
+    {
+        // Asigna el Transform del jugador al iniciar
+        if (PlayerTransform == null)
+        {
+            PlayerTransform = transform;
+        }
+        else
+        {
+            Debug.LogWarning("¡Ya existe un Transform de jugador asignado!");
+        }
+    }
 
     void Start()
     {
@@ -91,7 +105,7 @@ public class PlayerController : MonoBehaviour
         
         if (Input.GetKeyDown(KeyCode.G))
         {
-            PowerUpThrow(); // Llama a la función para lanzar el powerup
+            PowerUpThrow(); // Llama a la funcion para lanzar el powerup
         }
     }
     void FixedUpdate()
@@ -108,7 +122,7 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-        // Usamos OverlapSphere para detectar suelo de manera más precisa
+        // Usamos OverlapSphere para detectar suelo de manera mas precisa
         isGrounded = Physics.OverlapSphere(groundCheckPoint.position, groundCheckRadius, groundLayer).Length > 0;
 
         // Debug visual en el Editor
@@ -301,5 +315,36 @@ public class PlayerController : MonoBehaviour
             animator.ResetTrigger(idle2AnimationTrigger);
             isInIdle2 = false;
         }
+    }
+    //Metodos para agregar sonidos por eventos de animacion
+
+    //Walking
+    public void SoundWalking()
+    {
+        AudioManager.Instance.PlayFX("SoundWalk");
+    }
+    //Run
+    public void SoundRun()
+    {
+        AudioManager.Instance.PlayFX("SoundRun");
+    }
+    //Jump
+    public void SoundJumping()
+    {
+        AudioManager.Instance.PlayFX("SoundJump");
+    }
+    //Crounch
+    public void SoundCrounch()
+    {
+        AudioManager.Instance.PlayFX("SoundCrounch");
+    }
+    //Walking Crounch
+    public void SoundWalkingCrounch()
+    {
+        AudioManager.Instance.PlayFX("SoundWalkingCrounch");
+    }
+    public void SoundRecollect()
+    {
+        AudioManager.Instance.PlayFX("SoundRecollect");
     }
 }

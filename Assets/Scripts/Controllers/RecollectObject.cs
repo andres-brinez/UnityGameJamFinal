@@ -96,7 +96,13 @@ public class RecollectObject : MonoBehaviour
 
         yield return new WaitForSeconds(postAnimationDelay);
 
-        // Modificado para usar la cantidad configurada
+        // Solo llama a CollectPotion() si el objeto es una poción
+        if (gameObject.CompareTag("Potion"))
+        {
+            LevelManager.instance.CollectPotion();
+        }
+
+        // Añade el objeto al inventario 
         InventoryManager.Instance.AddPowerUp(itemName, quantity);
 
         targetController.enabled = true;
@@ -105,7 +111,6 @@ public class RecollectObject : MonoBehaviour
         isCollecting = false;
     }
 
-    // Método para obtener la duración de una animación
     private float GetAnimationLength(Animator animator, string animationName)
     {
         RuntimeAnimatorController ac = animator.runtimeAnimatorController;

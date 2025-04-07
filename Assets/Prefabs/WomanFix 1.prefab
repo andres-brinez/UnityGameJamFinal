@@ -280,7 +280,7 @@ Transform:
   m_GameObject: {fileID: 1620235058695433778}
   serializedVersion: 2
   m_LocalRotation: {x: 0.000000030489367, y: -0.122183256, z: 0.0000000037534122, w: 0.9925076}
-  m_LocalPosition: {x: 0.368, y: 1.4959999, z: -3.3400002}
+  m_LocalPosition: {x: 0.368, y: 2.1272135, z: -2.8544307}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1041,7 +1041,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 112
   m_CollisionDetection: 0
 --- !u!114 &4788707442429324588
 MonoBehaviour:
@@ -1076,7 +1076,7 @@ MonoBehaviour:
     m_Bits: 64
   idleTimeout: 5
   idle2AnimationTrigger: Idle2
-  animator: {fileID: 0}
+  animator: {fileID: 17339730238553272}
   isGrounded: 1
   currentSpeed: 0
 --- !u!114 &4346451427368682283
@@ -1091,7 +1091,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 15b9f3c562860eb4e9c927121785f233, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  projectilePrefab: {fileID: 5232365571606420382, guid: eda45e6594109b140973857498652cd1, type: 3}
+  projectilePrefab: {fileID: 5868891507698875304, guid: 1c6ad7d1afa30444d9e75ec5b822500e, type: 3}
   throwPoint: {fileID: 2972549484609854915}
   baseThrowForce: 10
   trajectoryLine: {fileID: 9032220062926738742}
@@ -2002,13 +2002,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4066672079384186561}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0.087400675, y: -0, z: -0, w: 0.99617326}
   m_LocalPosition: {x: 0.038, y: 1.426, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6238886498847347020}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 10.028, y: 0, z: 0}
 --- !u!1 &4069571176710833694
 GameObject:
   m_ObjectHideFlags: 0
@@ -2479,16 +2479,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Damping: {x: 0, y: 0, z: 1.5}
-  ShoulderOffset: {x: 0.3300002, y: -0.33, z: 0.32}
+  ShoulderOffset: {x: 0.33, y: -0.33, z: 0.68}
   VerticalArmLength: 0.4
   CameraSide: 1
-  CameraDistance: 3.659999
+  CameraDistance: 3.66
   CameraCollisionFilter:
     serializedVersion: 2
     m_Bits: 0
   IgnoreTag: 
   CameraRadius: 0.2
-  DampingIntoCollision: 0
+  DampingIntoCollision: 0.89
   DampingFromCollision: 2
 --- !u!1 &5213291315992855155
 GameObject:
