@@ -2071,6 +2071,18 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1838736726948602159, guid: dad77ec51c0248a4fb755bdd037bf56f, type: 3}
+      propertyPath: m_Value
+      value: 0.0001
+      objectReference: {fileID: 0}
+    - target: {fileID: 1838736726948602159, guid: dad77ec51c0248a4fb755bdd037bf56f, type: 3}
+      propertyPath: m_MaxValue
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1838736726948602159, guid: dad77ec51c0248a4fb755bdd037bf56f, type: 3}
+      propertyPath: m_MinValue
+      value: 0.0001
+      objectReference: {fileID: 0}
     - target: {fileID: 2293963555065221112, guid: dad77ec51c0248a4fb755bdd037bf56f, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: -18
@@ -2632,6 +2644,18 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6995406171616953742, guid: dad77ec51c0248a4fb755bdd037bf56f, type: 3}
+      propertyPath: m_Value
+      value: 0.0001
+      objectReference: {fileID: 0}
+    - target: {fileID: 6995406171616953742, guid: dad77ec51c0248a4fb755bdd037bf56f, type: 3}
+      propertyPath: m_MaxValue
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6995406171616953742, guid: dad77ec51c0248a4fb755bdd037bf56f, type: 3}
+      propertyPath: m_MinValue
+      value: 0.0001
+      objectReference: {fileID: 0}
+    - target: {fileID: 6995406171616953742, guid: dad77ec51c0248a4fb755bdd037bf56f, type: 3}
       propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 900754812}
@@ -2642,6 +2666,18 @@ PrefabInstance:
     - target: {fileID: 6997525794389265972, guid: dad77ec51c0248a4fb755bdd037bf56f, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: -275.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 7243532933484006681, guid: dad77ec51c0248a4fb755bdd037bf56f, type: 3}
+      propertyPath: m_Value
+      value: 0.0001
+      objectReference: {fileID: 0}
+    - target: {fileID: 7243532933484006681, guid: dad77ec51c0248a4fb755bdd037bf56f, type: 3}
+      propertyPath: m_MaxValue
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7243532933484006681, guid: dad77ec51c0248a4fb755bdd037bf56f, type: 3}
+      propertyPath: m_MinValue
+      value: 0.0001
       objectReference: {fileID: 0}
     - target: {fileID: 7291013187754246483, guid: dad77ec51c0248a4fb755bdd037bf56f, type: 3}
       propertyPath: m_fontSize
