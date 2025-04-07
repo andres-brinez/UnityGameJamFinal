@@ -7,6 +7,7 @@ TagManager:
   - Ground
   - DamageObject
   - Enemy
+  - Potion
   layers:
   - Default
   - TransparentFX
@@ -17,6 +18,7 @@ TagManager:
   - Ground
   - Obstacle
   - Enemy
+  - Bush
   - 
   - 
   - 
@@ -38,8 +40,7 @@ TagManager:
   - 
   - 
   - 
-  - 
-  - 
+  - MiniMapa
   m_SortingLayers:
   - name: Default
     uniqueID: 0
