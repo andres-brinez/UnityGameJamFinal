@@ -357,4 +357,10 @@ public class EnemyAI : MonoBehaviour
         Gizmos.color = new Color(0, 0.5f, 1, 0.2f);
         Gizmos.DrawSphere(transform.position, flashlightDetectionDistance);
     }
+    //Metodo para sonidos por eventos de animacion
+
+    public void AttackEnemySound()
+    {
+        AudioManager.Instance.PlayFX("AttackEnemy");
+    }
 }

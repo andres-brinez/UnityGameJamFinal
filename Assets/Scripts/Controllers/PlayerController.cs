@@ -316,4 +316,35 @@ public class PlayerController : MonoBehaviour
             isInIdle2 = false;
         }
     }
+    //Metodos para agregar sonidos por eventos de animacion
+
+    //Walking
+    public void SoundWalking()
+    {
+        AudioManager.Instance.PlayFX("SoundWalk");
+    }
+    //Run
+    public void SoundRun()
+    {
+        AudioManager.Instance.PlayFX("SoundRun");
+    }
+    //Jump
+    public void SoundJumping()
+    {
+        AudioManager.Instance.PlayFX("SoundJump");
+    }
+    //Crounch
+    public void SoundCrounch()
+    {
+        AudioManager.Instance.PlayFX("SoundCrounch");
+    }
+    //Walking Crounch
+    public void SoundWalkingCrounch()
+    {
+        AudioManager.Instance.PlayFX("SoundWalkingCrounch");
+    }
+    public void SoundRecollect()
+    {
+        AudioManager.Instance.PlayFX("SoundRecollect");
+    }
 }

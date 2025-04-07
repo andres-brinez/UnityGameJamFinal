@@ -67,14 +67,14 @@ public class FlashlightController : MonoBehaviour
         IsFlashlightOn = !IsFlashlightOn;
         flashlight.enabled = IsFlashlightOn;
 
-        // AudioManager.Instance.PlaySFX(IsFlashlightOn ? "flashlight_on" : "flashlight_off");
+        AudioManager.Instance.PlayFX(IsFlashlightOn ? "flashlight_on" : "flashlight_off");
     }
 
     private void TurnOnFlashlight()
     {
         IsFlashlightOn = true;
         flashlight.enabled = true;
-        // AudioManager.Instance.PlaySFX("flashlight_on");
+        AudioManager.Instance.PlayFX("flashlight_on");
     }
 
     private void TurnOffFlashlight()

@@ -11,12 +11,26 @@ public class CameraController : MonoBehaviour
     private float tiempoMov;
     private float tiempoMovTotal;
     private float intensidadInicial;
-
+    private CinemachineBasicMultiChannelPerlin noise;
     private void Awake()
     {
         Instance = this;
         cinemachineVirtualCamera = GetComponent<CinemachineVirtualCamera>();
         CinemachineBasicMultiChannelPerlin = cinemachineVirtualCamera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
+    }
+    private void Start()
+    {
+        {
+            // Obtener el componente de noise
+            noise = cinemachineVirtualCamera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
+
+            // Configurar ambos valores a 0 al inicio
+            if (noise != null)
+            {
+                noise.m_AmplitudeGain = 0f;
+                noise.m_FrequencyGain = 0f;
+            }
+        }
     }
     public void MoverCam (float intensidad, float frecuencia, float tiempo)
     {

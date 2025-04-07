@@ -321,4 +321,13 @@ public class PlayerAimThrow : MonoBehaviour
         InventoryManager.Instance.RemovePowerUp("Frasco");
 
     }
+    //Metodos para agregar sonidos por eventos de animacion
+    public void SoundThrow()
+    {
+        AudioManager.Instance.PlayFX("SoundThrow");
+    }
+    public void SoundAim()
+    {
+        AudioManager.Instance.PlayFX("SoundAim");
+    }
 }
