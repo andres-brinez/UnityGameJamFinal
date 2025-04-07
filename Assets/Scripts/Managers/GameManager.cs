@@ -3,13 +3,12 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-
     public static GameManager Instance { get; private set; }
     private bool isPaused;
     public bool gameStarted { get; private set; } = false;
     public string musicNameStartGame = "Mix Game";
     public string musicNameMenu = "Mix Pantalla de inicio";
-    
+
     private void Awake()
     {
         if (Instance == null)
@@ -26,7 +25,15 @@ public class GameManager : MonoBehaviour
     }
     void Start()
     {
-        AudioManager.Instance.PlayMusic(musicNameMenu); 
+        AudioManager.Instance.PlayMusic(musicNameMenu);
+    }
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape) && !SceneManager.GetSceneByName("OptionMenu").isLoaded)
+        {
+            PauseGame();
+            OpenOptionsMenu();
+        }
     }
     public void StartGame()
     {
@@ -67,8 +74,13 @@ public class GameManager : MonoBehaviour
 
     public void PauseGame()
     {
-        isPaused = !isPaused;
-        Time.timeScale = isPaused ? 0 : 1;
+        isPaused = true;
+        Time.timeScale = 0f;
+    }
+    public void ResumeGame()
+    {
+        isPaused = false;
+        Time.timeScale = 1f;
     }
     public void OpenOptionsMenu()
     {
@@ -79,6 +91,7 @@ public class GameManager : MonoBehaviour
     {
         SceneManager.LoadScene("CreditsMenu", LoadSceneMode.Additive);
     }
+
 }
 /*Forma de utilizar funciones en otros scripts, llamar escenas por nombres
 GameManager.instance.LoadSceneByName("Menu") */
