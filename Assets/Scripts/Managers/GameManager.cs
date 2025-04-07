@@ -3,9 +3,13 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-public static GameManager Instance {  get; private set; }
-    private bool isPaused;
 
+    public static GameManager Instance { get; private set; }
+    private bool isPaused;
+    public bool gameStarted { get; private set; } = false;
+    public string musicNameStartGame = "Mix Game";
+    public string musicNameMenu = "Mix Pantalla de inicio";
+    
     private void Awake()
     {
         if (Instance == null)
@@ -17,8 +21,21 @@ public static GameManager Instance {  get; private set; }
         else
         {
             Destroy(this.gameObject);
+
         }
     }
+    void Start()
+    {
+        AudioManager.Instance.PlayMusic(musicNameMenu); 
+    }
+    public void StartGame()
+    {
+        gameStarted = true;
+        AudioManager.Instance.PlayMusic(musicNameStartGame); // Cambia la mÃºsica al iniciar el juego
+        Debug.Log("El juego ha comenzado");
+
+    }
+
     // nameScene: Nombre de la escena
     public void LoadSceneByName(string nameScene)
     {
@@ -27,7 +44,7 @@ public static GameManager Instance {  get; private set; }
 
     public void ReloadCurrentScene()
     {
-    SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
     // Carga la siguiente escena por index
@@ -43,7 +60,7 @@ public static GameManager Instance {  get; private set; }
         }
         else
         {
-            Debug.LogWarning("No hay más escenas. ¡Has completado el juego!");
+            Debug.LogWarning("No hay mï¿½s escenas. ï¿½Has completado el juego!");
             ReloadCurrentScene(); // Recargar la primera escena
         }
     }
