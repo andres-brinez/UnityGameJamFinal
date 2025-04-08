@@ -65,7 +65,7 @@ public class LevelManager : MonoBehaviour
         if (potionCounterText != null)
         {
             int remaining = totalPotions - collectedPotions;
-            potionCounterText.text = $"Pociones restantes: {remaining}";
+            potionCounterText.text = $"Remaining potions: {remaining}";
 
             // Cambiar color cuando quedan pocas
             if (remaining <= 3)
@@ -84,7 +84,7 @@ public class LevelManager : MonoBehaviour
         if (currentPortal == null && portalPrefab != null && portalSpawnPoint != null)
         {
             currentPortal = Instantiate(portalPrefab, portalSpawnPoint.position, portalSpawnPoint.rotation);
-            potionCounterText.text = "¡Portal activado!";
+            potionCounterText.text = "¡Portal activate!";
         }
     }
 

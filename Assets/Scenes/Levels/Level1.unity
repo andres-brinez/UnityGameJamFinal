@@ -2841,7 +2841,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3879239669015414941, guid: ae35dbacdcca8aa4d83af3ecc645cedb, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5789785942079513070, guid: ae35dbacdcca8aa4d83af3ecc645cedb, type: 3}
       propertyPath: m_Acceleration
@@ -3611,7 +3611,7 @@ Transform:
   m_GameObject: {fileID: 666109026}
   serializedVersion: 2
   m_LocalRotation: {x: 0.087400675, y: 0, z: 0, w: 0.99617326}
-  m_LocalPosition: {x: 0.36808878, y: 2.014143, z: -2.8540316}
+  m_LocalPosition: {x: 0.368, y: 2.0142136, z: -2.8544307}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -7672,7 +7672,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1530571147
 Transform:
   m_ObjectHideFlags: 0
@@ -10248,6 +10248,7 @@ MonoBehaviour:
       variationIcon: {fileID: 0}
     enterAnimationTrigger: Idle2
     idleAnimationState: Idle2
+    avatarImage: {fileID: 0}
   - characterObject: {fileID: 5349702719845632225}
     characterName: Man
     variations:
@@ -10262,6 +10263,7 @@ MonoBehaviour:
       variationIcon: {fileID: 0}
     enterAnimationTrigger: Idle2
     idleAnimationState: Idle2
+    avatarImage: {fileID: 0}
   previewPosition: {fileID: 794063477}
   spawnPosition: {fileID: 49512499}
   enterAnimationDuration: 1.5
@@ -10358,11 +10360,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1652587128212453115, guid: 563f1ed5af4c4c343bf57372752357c0, type: 3}
       propertyPath: CameraDistance
-      value: 3.659595
+      value: 3.659998
       objectReference: {fileID: 0}
     - target: {fileID: 1652587128212453115, guid: 563f1ed5af4c4c343bf57372752357c0, type: 3}
       propertyPath: ShoulderOffset.x
-      value: 0.3300888
+      value: 0.3300003
       objectReference: {fileID: 0}
     - target: {fileID: 2419167007114674307, guid: 563f1ed5af4c4c343bf57372752357c0, type: 3}
       propertyPath: m_Name
@@ -10374,15 +10376,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4301459229100906000, guid: 563f1ed5af4c4c343bf57372752357c0, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.36808878
+      value: 0.368
       objectReference: {fileID: 0}
     - target: {fileID: 4301459229100906000, guid: 563f1ed5af4c4c343bf57372752357c0, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2.127143
+      value: 2.1272135
       objectReference: {fileID: 0}
     - target: {fileID: 4301459229100906000, guid: 563f1ed5af4c4c343bf57372752357c0, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -2.8540316
+      value: -2.8544307
       objectReference: {fileID: 0}
     - target: {fileID: 5176217889688961929, guid: 563f1ed5af4c4c343bf57372752357c0, type: 3}
       propertyPath: toggleKey
@@ -11499,6 +11501,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 1884691294479808325, guid: 2eee95b7463305b4984d66df79d2167e, type: 3}
+    - {fileID: 159078180368135726, guid: 2eee95b7463305b4984d66df79d2167e, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 136176179295287685, guid: 2eee95b7463305b4984d66df79d2167e, type: 3}

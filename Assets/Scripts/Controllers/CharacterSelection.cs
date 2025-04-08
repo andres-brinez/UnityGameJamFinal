@@ -20,6 +20,7 @@ public class CharacterData
     public List<CharacterVariation> variations; // Lista de estilos/materiales
     public string enterAnimationTrigger = "Enter"; // Trigger de animación inicial
     public string idleAnimationState = "Idle";    // Nombre del estado de animación Idle
+    public Image avatarImage;         // Imagen del avatar para mostrar en UI al confirmar
 }
 
 public class CharacterSelection : MonoBehaviour
@@ -195,6 +196,27 @@ public class CharacterSelection : MonoBehaviour
             characters[currentCharIndex].characterObject.transform.position = spawnPosition.position;
             characters[currentCharIndex].characterObject.transform.rotation = spawnPosition.rotation;
             hasConfirmedSelection = true; // Detiene la rotación y animación Idle
+
+            // Activa la imagen del avatar y desactiva las demás
+            ActivateAvatarImage();
+        }
+    }
+
+    void ActivateAvatarImage()
+    {
+        // Desactiva todas las imágenes de avatar primero
+        foreach (var character in characters)
+        {
+            if (character.avatarImage != null)
+            {
+                character.avatarImage.gameObject.SetActive(false);
+            }
+        }
+
+        // Activa solo la imagen del avatar seleccionado
+        if (characters[currentCharIndex].avatarImage != null)
+        {
+            characters[currentCharIndex].avatarImage.gameObject.SetActive(true);
         }
     }
 
