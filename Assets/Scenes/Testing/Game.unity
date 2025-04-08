@@ -18132,7 +18132,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1652587128212453115, guid: 563f1ed5af4c4c343bf57372752357c0, type: 3}
       propertyPath: CameraCollisionFilter.m_Bits
-      value: 448
+      value: 192
       objectReference: {fileID: 0}
     - target: {fileID: 2419167007114674307, guid: 563f1ed5af4c4c343bf57372752357c0, type: 3}
       propertyPath: m_Name
@@ -23046,7 +23046,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5534226920584039314, guid: b957c702003ce354eb899fd1578bfef2, type: 3}
       propertyPath: CameraCollisionFilter.m_Bits
-      value: 448
+      value: 192
       objectReference: {fileID: 0}
     - target: {fileID: 5871762329708249018, guid: b957c702003ce354eb899fd1578bfef2, type: 3}
       propertyPath: m_Enabled
