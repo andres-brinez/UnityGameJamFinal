@@ -16557,6 +16557,7 @@ GameObject:
   - component: {fileID: 136176179295287685}
   - component: {fileID: 5332375320771408896}
   - component: {fileID: 7410081338218004599}
+  - component: {fileID: 159078180368135726}
   m_Layer: 0
   m_Name: Boss
   m_TagString: Untagged
@@ -16633,6 +16634,34 @@ CapsuleCollider:
   m_Height: 0.019644292
   m_Direction: 1
   m_Center: {x: -1.2079476e-12, y: 0.009556433, z: 0.0005510628}
+--- !u!114 &159078180368135726
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7348415842931724506}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac5087e0dafd8654eb2a318455de4a30, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: {fileID: 0}
+  shadowProjectile: {fileID: 0}
+  fireballProjectile: {fileID: 0}
+  enemyPrefab: {fileID: 0}
+  projectileSpawnPoint: {fileID: 0}
+  moveSpeed: 3.5
+  minDistance: 5
+  maxDistance: 10
+  rotationSpeed: 10
+  attack1Cooldown: 2
+  attack2Cooldown: 1.5
+  attack3Cooldown: 3
+  spawnPoints: []
+  enemiesPerSpawnPoint: 1
+  enemyLifetime: 15
+  summonDuration: 2
 --- !u!1 &7386880742264847401
 GameObject:
   m_ObjectHideFlags: 0

@@ -187,4 +187,10 @@ public class BossController : MonoBehaviour
         GameObject fireball = Instantiate(fireballProjectile, projectileSpawnPoint.position, projectileSpawnPoint.rotation);
         fireball.GetComponent<Rigidbody>().AddForce(projectileSpawnPoint.forward * 15f, ForceMode.Impulse);
     }
+    //metodo vibracion cuando el boss camine//
+
+    public void WalkingVibrationBoss()
+    {
+        CameraController.Instance.MoverCam(1.5f, 2f, 0.3f);
+    }
 }

@@ -80,7 +80,7 @@ public class GameManager : MonoBehaviour
         Debug.Log("¡Has ganado el juego!");
 
         Time.timeScale = 0;
-        SceneManager.LoadScene("WinScreen", LoadSceneMode.Additive);
+       // panelWinner.SetActive(true); 
     }
 
     // nameScene: Nombre de la escena
@@ -119,6 +119,8 @@ public class GameManager : MonoBehaviour
     }
     public void ResumeGame()
     {
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
         isPaused = false;
         Time.timeScale = 1f;
     }

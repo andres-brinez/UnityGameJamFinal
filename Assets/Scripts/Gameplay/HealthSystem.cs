@@ -60,4 +60,8 @@ public class HealthSystem : MonoBehaviour
             bossController.DestroyAllSummonedEnemies();
         }
     }
+    public void WinGame()
+    {
+        GameManager.Instance.WinGame();
+    }
 }
