@@ -6,9 +6,9 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
     private bool isPaused = false;
-    [SerializedField]private bool gameStarted { get; private set; } = false;
-    [SerializeField]private bool gameWon { get; private set; } = false;
-    [SerializeField] private bool isGameOver { get; private set; } = false;
+    [SerializeField] public bool gameStarted { get; private set; } = false;
+    [SerializeField] public bool gameWon { get; private set; } = false;
+    [SerializeField] public bool isGameOver { get; private set; } = false;
     private string musicNameStartGame = "Mix Game";
     private string musicNameMenu = "Mix Pantalla de inicio";
     [SerializeField] private GameObject gameOverCanvas;
@@ -31,7 +31,7 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         AudioManager.Instance.PlayMusic(musicNameMenu);
-        
+
     }
     void Update()
     {
@@ -41,7 +41,7 @@ public class GameManager : MonoBehaviour
             OpenOptionsMenu();
         }
 
-        if(gameWon)
+        if (gameWon)
         {
             Time.timeScale = 0f; // Pausa el juego al ganar
             winCanvas.SetActive(true); // Muestra el canvas de victoria
@@ -100,7 +100,7 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("No hay m�s escenas. �Has completado el juego!");
+            Debug.LogWarning("No hay m s escenas.  Has completado el juego!");
             ReloadCurrentScene(); // Recargar la primera escena
         }
     }
@@ -133,7 +133,7 @@ public class GameManager : MonoBehaviour
 
     public void GoToMainMenu()
     {
-        Time.timeScale = 1f; 
+        Time.timeScale = 1f;
         SceneManager.LoadScene("MainMenu");
     }
 }
