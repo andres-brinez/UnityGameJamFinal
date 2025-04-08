@@ -2098,7 +2098,7 @@ PrefabInstance:
     - target: {fileID: 3292652493985238276, guid: dad77ec51c0248a4fb755bdd037bf56f, type: 3}
       propertyPath: m_TargetGraphic
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 7763322216071814472}
     - target: {fileID: 3292652493985238276, guid: dad77ec51c0248a4fb755bdd037bf56f, type: 3}
       propertyPath: m_Colors.m_NormalColor.b
       value: 0.90588236
@@ -2406,7 +2406,7 @@ PrefabInstance:
     - target: {fileID: 5727126075664133221, guid: dad77ec51c0248a4fb755bdd037bf56f, type: 3}
       propertyPath: m_TargetGraphic
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 7763322216071814473}
     - target: {fileID: 5727126075664133221, guid: dad77ec51c0248a4fb755bdd037bf56f, type: 3}
       propertyPath: m_Colors.m_NormalColor.b
       value: 0.90588236
@@ -2558,6 +2558,10 @@ PrefabInstance:
     - target: {fileID: 6299280540481653639, guid: dad77ec51c0248a4fb755bdd037bf56f, type: 3}
       propertyPath: m_hasFontAssetChanged
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6434153726996951513, guid: dad77ec51c0248a4fb755bdd037bf56f, type: 3}
+      propertyPath: m_CaptionText
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 6636040447367249655, guid: dad77ec51c0248a4fb755bdd037bf56f, type: 3}
       propertyPath: m_Sprite
@@ -2862,7 +2866,7 @@ PrefabInstance:
     - target: {fileID: 7919769640738575468, guid: dad77ec51c0248a4fb755bdd037bf56f, type: 3}
       propertyPath: m_TargetGraphic
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 7763322216071814474}
     - target: {fileID: 7919769640738575468, guid: dad77ec51c0248a4fb755bdd037bf56f, type: 3}
       propertyPath: m_Colors.m_NormalColor.b
       value: 0.90588236
@@ -2918,7 +2922,7 @@ PrefabInstance:
     - target: {fileID: 8230640240712471360, guid: dad77ec51c0248a4fb755bdd037bf56f, type: 3}
       propertyPath: m_TargetGraphic
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 7763322216071814475}
     - target: {fileID: 8230640240712471360, guid: dad77ec51c0248a4fb755bdd037bf56f, type: 3}
       propertyPath: m_Colors.m_NormalColor.b
       value: 0.9056604

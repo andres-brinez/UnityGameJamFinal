@@ -1,13 +1,18 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
-    private bool isPaused;
+    private bool isPaused = false;
     public bool gameStarted { get; private set; } = false;
+    public bool gameWon { get; private set; } = false;
+    public bool isGameOver { get; private set; } = false;
     public string musicNameStartGame = "Mix Game";
     public string musicNameMenu = "Mix Pantalla de inicio";
+    [SerializeField] private GameObject gameOverCanvas;
+    [SerializeField] private GameObject winCanvas;
 
     private void Awake()
     {
@@ -26,6 +31,7 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         AudioManager.Instance.PlayMusic(musicNameMenu);
+        
     }
     void Update()
     {
@@ -34,6 +40,12 @@ public class GameManager : MonoBehaviour
             PauseGame();
             OpenOptionsMenu();
         }
+
+        if(gameWon)
+        {
+            Time.timeScale = 0f; // Pausa el juego al ganar
+            winCanvas.SetActive(true); // Muestra el canvas de victoria
+        }
     }
     public void StartGame()
     {
@@ -41,6 +53,27 @@ public class GameManager : MonoBehaviour
         AudioManager.Instance.PlayMusic(musicNameStartGame); // Cambia la música al iniciar el juego
         Debug.Log("El juego ha comenzado");
 
+    }
+
+    public void GameOver()
+    {
+        if (isGameOver) return; // Evitar múltiples llamadas
+
+        Debug.Log("Juego perdido");
+        isGameOver = true;
+        Time.timeScale = 0f;
+        ShowGameOverMenu();
+    }
+
+    public void WinGame()
+    {
+        if (gameWon) return; // Evita que se ejecute más de una vez
+
+        gameWon = true;
+        Debug.Log("¡Has ganado el juego!");
+
+        Time.timeScale = 0;
+        SceneManager.LoadScene("WinScreen", LoadSceneMode.Additive);
     }
 
     // nameScene: Nombre de la escena
@@ -92,6 +125,17 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene("CreditsMenu", LoadSceneMode.Additive);
     }
 
+    public void ShowGameOverMenu()
+    {
+        gameOverCanvas.SetActive(true);
+        Time.timeScale = 0f;
+    }
+
+    public void GoToMainMenu()
+    {
+        Time.timeScale = 1f; 
+        SceneManager.LoadScene("MainMenu");
+    }
 }
 /*Forma de utilizar funciones en otros scripts, llamar escenas por nombres
 GameManager.instance.LoadSceneByName("Menu") */
