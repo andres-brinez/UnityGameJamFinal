@@ -6,9 +6,9 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
     private bool isPaused = false;
-    public bool gameStarted { get; private set; } = false;
-    public bool gameWon { get; private set; } = false;
-    public bool isGameOver { get; private set; } = false;
+    [SerializedField]private bool gameStarted { get; private set; } = false;
+    [SerializeField]private bool gameWon { get; private set; } = false;
+    [SerializeField] private bool isGameOver { get; private set; } = false;
     private string musicNameStartGame = "Mix Game";
     private string musicNameMenu = "Mix Pantalla de inicio";
     [SerializeField] private GameObject gameOverCanvas;
