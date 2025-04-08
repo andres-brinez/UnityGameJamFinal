@@ -823,7 +823,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 91ccd12a73e4d444aaa359e0fb858533, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  detectionRange: 10
+  detectionRange: 14.8
   attackRange: 2.44
   stoppingDistance: 1.5
   playerLayer:
@@ -831,24 +831,28 @@ MonoBehaviour:
     m_Bits: 8
   obstacleLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 128
   patrolSpeed: 5
   chaseSpeed: 15
   rotationSpeed: 15
-  brakingDistance: 6.01
-  brakingSharpness: 1.73
-  waypoints: []
+  brakingDistance: 2.61
+  brakingSharpness: 2.03
+  waypoints:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   waypointStopTime: 2
   hideCheckRadius: 15
   bushLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 512
   confusionDuration: 3
   enemyAnimator: {fileID: 0}
   confusedAnimationParam: IsConfused
   flashlightConfusionDuration: 5
   flashlightDetectionAngle: 45
-  flashlightDetectionDistance: 15
+  flashlightDetectionDistance: 11.1
   minFlashlightConfusionCooldown: 10
 --- !u!195 &5789785942079513070
 NavMeshAgent:
@@ -1784,19 +1788,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3574362967237534935, guid: a2a060732547fe64581bb0cb3c2bdf1d, type: 3}
       propertyPath: m_BoundingSphereOverride.w
-      value: 3.3039166e+35
+      value: 5e-44
       objectReference: {fileID: 0}
     - target: {fileID: 3574362967237534935, guid: a2a060732547fe64581bb0cb3c2bdf1d, type: 3}
       propertyPath: m_BoundingSphereOverride.x
-      value: 9.44e-43
+      value: 4.6e-44
       objectReference: {fileID: 0}
     - target: {fileID: 3574362967237534935, guid: a2a060732547fe64581bb0cb3c2bdf1d, type: 3}
       propertyPath: m_BoundingSphereOverride.y
-      value: -1.5798547e-25
+      value: 4.8e-44
       objectReference: {fileID: 0}
     - target: {fileID: 3574362967237534935, guid: a2a060732547fe64581bb0cb3c2bdf1d, type: 3}
       propertyPath: m_BoundingSphereOverride.z
-      value: 9.44e-43
+      value: 4.9e-44
       objectReference: {fileID: 0}
     - target: {fileID: 3650638188812647480, guid: a2a060732547fe64581bb0cb3c2bdf1d, type: 3}
       propertyPath: m_RootOrder

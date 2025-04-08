@@ -8,6 +8,7 @@ TagManager:
   - DamageObject
   - Enemy
   - Potion
+  - Boss
   layers:
   - Default
   - TransparentFX
