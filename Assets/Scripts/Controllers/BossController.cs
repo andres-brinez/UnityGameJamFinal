@@ -39,7 +39,7 @@ public class BossController : MonoBehaviour
 
     void Start()
     {
-        player = PlayerController.PlayerTransform;
+        player = GameObject.FindGameObjectWithTag("Player").transform;
         animator = GetComponent<Animator>();
         agent = GetComponent<NavMeshAgent>();
         health = GetComponent<HealthSystem>();

@@ -54,19 +54,6 @@ public class PlayerController : MonoBehaviour
 
     public static Transform PlayerTransform { get; private set; }
 
-    private void Awake()
-    {
-        // Asigna el Transform del jugador al iniciar
-        if (PlayerTransform == null)
-        {
-            PlayerTransform = transform;
-        }
-        else
-        {
-            Debug.LogWarning("¡Ya existe un Transform de jugador asignado!");
-        }
-    }
-
     void Start()
     {
         rb = GetComponent<Rigidbody>();

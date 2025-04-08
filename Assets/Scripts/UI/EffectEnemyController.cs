@@ -16,7 +16,7 @@ public class EffectEnemyController : MonoBehaviour
 
     void Start()
     {
-        player = PlayerController.PlayerTransform; 
+        player = GameObject.FindGameObjectWithTag("Player").transform;
     }
     void Update()
     {

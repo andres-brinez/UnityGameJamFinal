@@ -38,6 +38,8 @@ public class GameManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Escape) && !SceneManager.GetSceneByName("OptionMenu").isLoaded)
         {
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
             PauseGame();
             OpenOptionsMenu();
         }
@@ -58,6 +60,8 @@ public class GameManager : MonoBehaviour
 
     public void GameOver()
     {
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
         if (isGameOver) return; // Evitar múltiples llamadas
 
         Debug.Log("Juego perdido");
@@ -68,6 +72,8 @@ public class GameManager : MonoBehaviour
 
     public void WinGame()
     {
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
         if (gameWon) return; // Evita que se ejecute más de una vez
 
         gameWon = true;
