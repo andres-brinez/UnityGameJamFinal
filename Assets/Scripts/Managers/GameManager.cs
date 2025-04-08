@@ -14,6 +14,7 @@ public class GameManager : MonoBehaviour
     private string musicNameMenu = "Mix Pantalla de inicio";
     [SerializeField] private GameObject gameOverCanvas;
     [SerializeField] private GameObject winCanvas;
+    [SerializeField] private GameObject menuCanvas;
 
     private void Awake()
     {
@@ -50,6 +51,14 @@ public class GameManager : MonoBehaviour
             Time.timeScale = 0f; // Pausa el juego al ganar
             winCanvas.SetActive(true); // Muestra el canvas de victoria
         }
+
+        // si el menu esta desactivado y el juego no ha comenzado
+        if (!menuCanvas.activeSelf && !gameStarted)
+        {
+            StartGame(); 
+        }
+        
+
     }
     public void StartGame()
     {
