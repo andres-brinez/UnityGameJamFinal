@@ -9,8 +9,8 @@ public class GameManager : MonoBehaviour
     public bool gameStarted { get; private set; } = false;
     public bool gameWon { get; private set; } = false;
     public bool isGameOver { get; private set; } = false;
-    public string musicNameStartGame = "Mix Game";
-    public string musicNameMenu = "Mix Pantalla de inicio";
+    private string musicNameStartGame = "Mix Game";
+    private string musicNameMenu = "Mix Pantalla de inicio";
     [SerializeField] private GameObject gameOverCanvas;
     [SerializeField] private GameObject winCanvas;
 
