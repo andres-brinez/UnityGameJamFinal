@@ -7,8 +7,9 @@ public class HealthBar : MonoBehaviour
     [Header("Health Settings")]
     public Image healthBar;
     public float maxHealth = 100f;
-    private float currentHealth;
-    private bool isDead = false;
+    [SerializeField] private float currentHealth;
+    
+    [SerializeField] private bool isDead = false;
 
     [Header("Damage Effect")]
     public Image damageEffect;
@@ -41,12 +42,18 @@ public class HealthBar : MonoBehaviour
 
     void Update()
     {
-        if (isDead) return; 
+        if (currentHealth <= 0) {
+            isDead = true;
+            
+        } 
+        if (isDead){
+            Die();
+        }
 
-        // Actualizar efecto de daño
+        // Actualizar efecto de daï¿½o
         UpdateDamageEffect();
 
-        // Regeneración
+        // Regeneraciï¿½n
         HandleHealthRegeneration();
     }
 
@@ -106,10 +113,10 @@ public class HealthBar : MonoBehaviour
 
     public void TakeDamage(float damage)
     {
-        if (isDead) return; // No recibir daño si ya murio
+        if (isDead) return; // No recibir daï¿½o si ya murio
 
         currentHealth -= damage;
-        CameraController.Instance.MoverCam(3.5f, 3f, 0.8f); // Efewcto vibracion cada que se recibe daño
+        CameraController.Instance.MoverCam(3.5f, 3f, 0.8f); // Efewcto vibracion cada que se recibe daï¿½o
         timeSinceLastDamage = 0f;
         isRegenerating = false;
 
@@ -131,8 +138,8 @@ public class HealthBar : MonoBehaviour
 
     public void Die()
     {
-        Debug.Log("Player muerto - La regeneración está desactivada");
         // Aqui Game Over
+        GameManager.Instance.GameOver();
     }
 
     void OnTriggerEnter(Collider other)
