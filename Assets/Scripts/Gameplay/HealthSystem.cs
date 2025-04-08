@@ -1,9 +1,11 @@
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections;
+
 
 public class HealthSystem : MonoBehaviour
 {
-    [Header("Configuración")]
+    [Header("Configuraciï¿½n")]
     public int maxHealth = 100;
     public int currentHealth;
     public Animator animator;
@@ -21,6 +23,14 @@ public class HealthSystem : MonoBehaviour
     {
         currentHealth = maxHealth;
         UpdateHealthBar();
+    }
+
+    void Update()
+    {
+        if (currentHealth <= 0)
+        {
+            Die();
+        }
     }
 
     public void TakeDamage(int damage)
@@ -41,6 +51,8 @@ public class HealthSystem : MonoBehaviour
 
     void Die()
     {
+        Debug.Log("Ha muerto el jefe ");
+
         IsDead = true;
         if (healthBarFill != null)
             healthBarFill.transform.parent.gameObject.SetActive(false);
@@ -59,6 +71,14 @@ public class HealthSystem : MonoBehaviour
         {
             bossController.DestroyAllSummonedEnemies();
         }
+
+        StartCoroutine(WaitAndWin());
+    }
+
+    IEnumerator WaitAndWin()
+    {
+        yield return new WaitForSeconds(5f);
+        WinGame();
     }
     public void WinGame()
     {

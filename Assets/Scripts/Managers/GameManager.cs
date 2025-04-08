@@ -46,6 +46,7 @@ public class GameManager : MonoBehaviour
 
         if (gameWon)
         {
+            Debug.Log("Juego ganado");
             Time.timeScale = 0f; // Pausa el juego al ganar
             winCanvas.SetActive(true); // Muestra el canvas de victoria
         }
