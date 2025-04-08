@@ -179,11 +179,13 @@ public class BossController : MonoBehaviour
     // ===== EVENTOS DE ANIMACIÓN ===== //
     public void LaunchShadowProjectile()
     {
+        AudioManager.Instance.PlayFX("BossShadowProj");
         Instantiate(shadowProjectile, projectileSpawnPoint.position, projectileSpawnPoint.rotation);
     }
 
     public void LaunchFireball()
     {
+        AudioManager.Instance.PlayFX("BossFireball");
         GameObject fireball = Instantiate(fireballProjectile, projectileSpawnPoint.position, projectileSpawnPoint.rotation);
         fireball.GetComponent<Rigidbody>().AddForce(projectileSpawnPoint.forward * 15f, ForceMode.Impulse);
     }
@@ -192,5 +194,6 @@ public class BossController : MonoBehaviour
     public void WalkingVibrationBoss()
     {
         CameraController.Instance.MoverCam(1.5f, 2f, 0.3f);
+        AudioManager.Instance.PlayFX("BossWalking");
     }
 }
