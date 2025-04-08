@@ -53,11 +53,11 @@ public class GameManager : MonoBehaviour
         }
 
         // si el menu esta desactivado y el juego no ha comenzado
-        if (!menuCanvas.activeSelf && !gameStarted)
+        if (menuCanvas!=null && !menuCanvas.activeSelf && !gameStarted)
         {
-            StartGame(); 
+            StartGame();
         }
-        
+
 
     }
     public void StartGame()
@@ -65,6 +65,10 @@ public class GameManager : MonoBehaviour
         gameStarted = true;
         AudioManager.Instance.PlayMusic(musicNameStartGame); // Cambia la música al iniciar el juego
         Debug.Log("El juego ha comenzado");
+
+        winCanvas = FindObjectByName("WinCanvas");
+        menuCanvas = FindObjectByName("CanvasSelection");
+        gameOverCanvas= FindObjectByName("GameOverCanvas");
 
     }
 
@@ -90,7 +94,7 @@ public class GameManager : MonoBehaviour
         Debug.Log("¡Has ganado el juego!");
 
         Time.timeScale = 0;
-       // panelWinner.SetActive(true); 
+        // panelWinner.SetActive(true); 
     }
 
     // nameScene: Nombre de la escena
@@ -155,6 +159,22 @@ public class GameManager : MonoBehaviour
         Time.timeScale = 1f;
         SceneManager.LoadScene("MainMenu");
     }
+
+    private GameObject FindObjectByName(string name)
+    {
+        GameObject[] allObjects = Resources.FindObjectsOfTypeAll<GameObject>();
+
+        foreach (GameObject obj in allObjects)
+        {
+            if (obj.name == name)
+            {
+                return obj;
+            }
+        }
+
+        return null;
+    }
+
 }
 /*Forma de utilizar funciones en otros scripts, llamar escenas por nombres
 GameManager.instance.LoadSceneByName("Menu") */
