@@ -10,7 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 609280569260382430}
   - component: {fileID: 5633588455832203183}
-  m_Layer: 7
+  - component: {fileID: 5744940877263851489}
+  - component: {fileID: 1192148361152002360}
+  m_Layer: 9
   m_Name: Bush_02_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -63,6 +65,43 @@ LODGroup:
     renderers:
     - renderer: {fileID: 1861203858337315680}
   m_Enabled: 1
+--- !u!114 &5744940877263851489
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 233986929952047716}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 70ecde062e540d94299ec057801656d7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hideRadius: 1.3
+  playerLayer:
+    serializedVersion: 2
+    m_Bits: 8
+--- !u!135 &1192148361152002360
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 233986929952047716}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 1.1123474
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &990341479938824933
 GameObject:
   m_ObjectHideFlags: 0
@@ -74,7 +113,7 @@ GameObject:
   - component: {fileID: 2835251768738383493}
   - component: {fileID: 4990472358301838940}
   - component: {fileID: 1148249755887581882}
-  m_Layer: 7
+  m_Layer: 9
   m_Name: LOD1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -160,7 +199,7 @@ GameObject:
   - component: {fileID: 5160017926698211135}
   - component: {fileID: 3103130767855791366}
   - component: {fileID: 1861203858337315680}
-  m_Layer: 7
+  m_Layer: 9
   m_Name: LOD2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -246,7 +285,7 @@ GameObject:
   - component: {fileID: 5185146384705240467}
   - component: {fileID: 7027890855928510846}
   - component: {fileID: 7598067353273124555}
-  m_Layer: 7
+  m_Layer: 9
   m_Name: LOD0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -332,7 +371,7 @@ GameObject:
   - component: {fileID: 4285513579904947275}
   - component: {fileID: 4035961034181830611}
   - component: {fileID: 3111161724693340856}
-  m_Layer: 7
+  m_Layer: 9
   m_Name: LeafTrigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -401,7 +440,7 @@ GameObject:
   - component: {fileID: 2743792998467860969}
   - component: {fileID: 3668738760408769118}
   - component: {fileID: 4772696807572181482}
-  m_Layer: 7
+  m_Layer: 9
   m_Name: LeafParticleSystem
   m_TagString: Untagged
   m_Icon: {fileID: 0}

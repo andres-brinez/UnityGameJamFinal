@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 using UnityEngine.SceneManagement;
 
 
@@ -37,6 +38,8 @@ public class GameManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Escape) && !SceneManager.GetSceneByName("OptionMenu").isLoaded)
         {
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
             PauseGame();
             OpenOptionsMenu();
         }
@@ -57,6 +60,8 @@ public class GameManager : MonoBehaviour
 
     public void GameOver()
     {
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
         if (isGameOver) return; // Evitar múltiples llamadas
 
         Debug.Log("Juego perdido");
@@ -67,13 +72,15 @@ public class GameManager : MonoBehaviour
 
     public void WinGame()
     {
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
         if (gameWon) return; // Evita que se ejecute más de una vez
 
         gameWon = true;
         Debug.Log("¡Has ganado el juego!");
 
         Time.timeScale = 0;
-        SceneManager.LoadScene("WinScreen", LoadSceneMode.Additive);
+       // panelWinner.SetActive(true); 
     }
 
     // nameScene: Nombre de la escena
@@ -112,6 +119,8 @@ public class GameManager : MonoBehaviour
     }
     public void ResumeGame()
     {
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
         isPaused = false;
         Time.timeScale = 1f;
     }

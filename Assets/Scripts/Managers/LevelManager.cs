@@ -33,11 +33,13 @@ public class LevelManager : MonoBehaviour
             Destroy(gameObject);
         }
 
-        player = GameObject.FindGameObjectWithTag("Player");
     }
 
     void Start()
     {
+        player = GameObject.FindGameObjectWithTag("Player");
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
         // Contar solo las pociones en la escena objetos con tag "Potion"
         GameObject[] potions = GameObject.FindGameObjectsWithTag("Potion");
         totalPotions = potions.Length;

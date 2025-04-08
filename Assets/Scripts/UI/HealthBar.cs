@@ -23,9 +23,6 @@ public class HealthBar : MonoBehaviour
     private float timeSinceLastDamage = 0f;
     public bool isRegenerating = false;
 
-    [Header("References")]
-    public Animator barAnimator;
-
     void Start()
     {
         currentHealth = maxHealth;
@@ -146,16 +143,7 @@ public class HealthBar : MonoBehaviour
     {
         if (other.CompareTag("DamageObject") && !isDead)
         {
-            barAnimator.SetBool("DamageUI", true);
             TakeDamage(10f);
-        }
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.CompareTag("DamageObject"))
-        {
-            barAnimator.SetBool("DamageUI", false);
         }
     }
 

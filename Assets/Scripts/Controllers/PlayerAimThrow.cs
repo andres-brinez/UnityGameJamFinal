@@ -104,12 +104,9 @@ public class PlayerAimThrow : MonoBehaviour
 
         if (IsAiming)
         {
+            // Ajuste del ángulo SIEMPRE activo (incluso en movimiento)
             HandleDynamicAim();
-
-            if (Mathf.Abs(playerController ? playerController.currentSpeed : 0f) > 0.1f)
-            {
-                StopAiming();
-            }
+            UpdateTrajectory();
         }
 
         if (Input.GetMouseButtonUp(1))
@@ -117,22 +114,19 @@ public class PlayerAimThrow : MonoBehaviour
             StopAiming();
         }
     }
+
     void HandleDynamicAim()
     {
+        // Solo ajuste vertical con el mouse (ángulo de lanzamiento)
         float mouseY = Input.GetAxis("Mouse Y") * aimSensitivity;
         currentThrowAngle = Mathf.Clamp(currentThrowAngle - mouseY, minThrowAngle, maxThrowAngle);
 
-        float distanceInput = 0f;
-        if (Input.GetKey(KeyCode.Q)) distanceInput = -1f;
-        if (Input.GetKey(KeyCode.E)) distanceInput = 1f;
-
-        currentThrowDistance = Mathf.Clamp(
-            currentThrowDistance + distanceInput * aimDistanceChangeSpeed * Time.deltaTime,
-            minThrowDistance,
-            maxThrowDistance
-        );
+        // Reducir sensibilidad al moverse para mejor control
+        if (playerController && Mathf.Abs(playerController.currentSpeed) > 0.1f)
+        {
+            mouseY *= 0.7f; // 30% menos sensible si el jugador está en movimiento
+        }
     }
-
     void HandleChargedThrow()
     {
         if (!IsAiming) return;

@@ -54,19 +54,6 @@ public class PlayerController : MonoBehaviour
 
     public static Transform PlayerTransform { get; private set; }
 
-    private void Awake()
-    {
-        // Asigna el Transform del jugador al iniciar
-        if (PlayerTransform == null)
-        {
-            PlayerTransform = transform;
-        }
-        else
-        {
-            Debug.LogWarning("¡Ya existe un Transform de jugador asignado!");
-        }
-    }
-
     void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -135,9 +122,12 @@ public class PlayerController : MonoBehaviour
         float moveZ = Input.GetAxis("Vertical");
         currentSpeed = moveZ;
 
-        HandleRun();
+        // Reducir velocidad al apuntar
+        float speedMultiplier = (aimThrowController && aimThrowController.IsAiming) ? 0.6f : 1f;
 
-        Vector3 velocity = transform.forward * moveZ * speed * Time.fixedDeltaTime;
+        HandleRun(); // Aún permite correr, pero con speedMultiplier aplicado
+
+        Vector3 velocity = transform.forward * moveZ * speed * speedMultiplier * Time.fixedDeltaTime;
         rb.MovePosition(rb.position + velocity);
     }
 
@@ -202,7 +192,6 @@ public class PlayerController : MonoBehaviour
         if (isCrouching)
         {
             speed = crouchWalkSpeed;
-            // Solo activa IsWalkingCrouched si realmente se está moviendo
             animator.SetBool("IsWalkingCrouched", Mathf.Abs(currentSpeed) > 0.1f);
             animator.SetBool("IsRunning", false);
         }

@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4646461042493424798}
   - component: {fileID: 7239413287105015607}
   - component: {fileID: 8827638006060073058}
-  m_Layer: 7
+  m_Layer: 9
   m_Name: LOD2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -97,7 +97,7 @@ GameObject:
   - component: {fileID: 6042445700314100989}
   - component: {fileID: 6920974799616002293}
   - component: {fileID: 5005861628873476591}
-  m_Layer: 7
+  m_Layer: 9
   m_Name: LeafParticleSystem
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4997,7 +4997,7 @@ GameObject:
   - component: {fileID: 5607009836822543950}
   - component: {fileID: 2221193424372076811}
   - component: {fileID: 5527258845272419593}
-  m_Layer: 7
+  m_Layer: 9
   m_Name: LOD0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5082,7 +5082,8 @@ GameObject:
   m_Component:
   - component: {fileID: 7915993163180168968}
   - component: {fileID: 3134890711087374457}
-  m_Layer: 7
+  - component: {fileID: -6016133049825228648}
+  m_Layer: 9
   m_Name: Bush_03_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5135,6 +5136,22 @@ LODGroup:
     renderers:
     - renderer: {fileID: 8827638006060073058}
   m_Enabled: 1
+--- !u!114 &-6016133049825228648
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7390566949429054898}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 70ecde062e540d94299ec057801656d7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hideRadius: 1.3
+  playerLayer:
+    serializedVersion: 2
+    m_Bits: 8
 --- !u!1 &7486108536532557335
 GameObject:
   m_ObjectHideFlags: 0
@@ -5146,7 +5163,7 @@ GameObject:
   - component: {fileID: 1071902388310270121}
   - component: {fileID: 5081165286152435785}
   - component: {fileID: 1804438728566749654}
-  m_Layer: 7
+  m_Layer: 9
   m_Name: LeafTrigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5215,7 +5232,7 @@ GameObject:
   - component: {fileID: 1537724928900703416}
   - component: {fileID: 4472590288030620796}
   - component: {fileID: 3430987912046940380}
-  m_Layer: 7
+  m_Layer: 9
   m_Name: LOD1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
