@@ -5,6 +5,10 @@ TagManager:
   serializedVersion: 3
   tags:
   - Ground
+  - DamageObject
+  - Enemy
+  - Potion
+  - Boss
   layers:
   - Default
   - TransparentFX
@@ -12,6 +16,10 @@ TagManager:
   - Player
   - Water
   - UI
+  - Ground
+  - Obstacle
+  - Enemy
+  - Bush
   - 
   - 
   - 
@@ -33,11 +41,7 @@ TagManager:
   - 
   - 
   - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - MiniMapa
   m_SortingLayers:
   - name: Default
     uniqueID: 0

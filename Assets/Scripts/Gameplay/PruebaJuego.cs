@@ -7,7 +7,7 @@ public class PruebaJuego : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            GameManager.Instance.ReloadCurrentScene();
+            //GameManager.Instance.ReloadCurrentScene();
         }
     }
 }
