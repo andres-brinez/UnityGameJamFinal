@@ -9750,6 +9750,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 161454f4f828d6f49933dba8950f189a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  musicClipName: MusicBoss
+  loopMusic: 1
 --- !u!65 &1128823629887266890
 BoxCollider:
   m_ObjectHideFlags: 0

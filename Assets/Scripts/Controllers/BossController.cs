@@ -61,13 +61,17 @@ public class BossController : MonoBehaviour
 
     void Update()
     {
-        if (health.IsDead || player == null || isAttacking) return;
+        if (health.IsDead || player == null) return;
 
-        UpdateHealthPhase();
+        // Siempre mirar al jugador (incluso durante ataques)
         FacePlayer();
-        HandleMovement();
-    }
 
+        if (!isAttacking)
+        {
+            UpdateHealthPhase();
+            HandleMovement();
+        }
+    }
     void UpdateHealthPhase()
     {
         float healthPercent = (float)health.currentHealth / health.maxHealth;
@@ -79,12 +83,17 @@ public class BossController : MonoBehaviour
 
     void FacePlayer()
     {
-        Vector3 direction = (player.position - transform.position).normalized;
-        direction.y = 0;
-        Quaternion lookRotation = Quaternion.LookRotation(direction);
-        transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * rotationSpeed);
-    }
+        if (player == null) return;
 
+        Vector3 direction = (player.position - transform.position).normalized;
+        direction.y = 0; // Mantener la rotación solo en eje Y
+
+        if (direction != Vector3.zero)
+        {
+            Quaternion lookRotation = Quaternion.LookRotation(direction);
+            transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * rotationSpeed);
+        }
+    }
     void HandleMovement()
     {
         if (!agent.isOnNavMesh || !agent.enabled) return;

@@ -1,20 +1,28 @@
 using UnityEngine;
-using System.Collections;
 using UnityEngine.SceneManagement;
-
+using System;
 
 public class GameManager : MonoBehaviour
 {
+    // Singleton pattern
     public static GameManager Instance { get; private set; }
+
+    // Eventos estáticos
+    public static event Action OnGameOver;
+    public static event Action OnGameWin;
+    public static event Action OnGamePaused;
+    public static event Action OnGameResumed;
+    public static event Action OnGameStarted;
+
+    // Estados del juego
     private bool isPaused = false;
     [SerializeField] public bool gameStarted { get; private set; } = false;
     [SerializeField] public bool gameWon { get; private set; } = false;
     [SerializeField] public bool isGameOver { get; private set; } = false;
+
+    // Música
     private string musicNameStartGame = "Mix Game";
     private string musicNameMenu = "Mix Pantalla de inicio";
-    [SerializeField] private GameObject gameOverCanvas;
-    [SerializeField] private GameObject winCanvas;
-    [SerializeField] private GameObject menuCanvas;
 
     private void Awake()
     {
@@ -22,107 +30,119 @@ public class GameManager : MonoBehaviour
         {
             Instance = this;
             DontDestroyOnLoad(this.gameObject);
-            Debug.Log("Game manager se intancio");
+            Debug.Log("GameManager instanciado");
+            SceneManager.sceneLoaded += OnSceneLoaded;
         }
         else
         {
             Destroy(this.gameObject);
-
         }
     }
+
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        // Reiniciar estados del juego cuando se carga una escena de juego
+        if (!IsMenuScene(scene.name))
+        {
+            ResetGameStates();
+        }
+
+        // Configuración específica para el menú principal
+        if (scene.name == "MainMenu")
+        {
+            SetupMainMenu();
+        }
+    }
+
+    private bool IsMenuScene(string sceneName)
+    {
+        return sceneName == "OptionMenu" || sceneName == "CreditsMenu" || sceneName == "MainMenu";
+    }
+
+    private void SetupMainMenu()
+    {
+        ResetGameStates();
+        gameStarted = false;
+        AudioManager.Instance.PlayMusic(musicNameMenu);
+    }
+
+    private void ResetGameStates()
+    {
+        isGameOver = false;
+        gameWon = false;
+        isPaused = false;
+        Time.timeScale = 1f;
+    }
+
     void Start()
     {
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
         AudioManager.Instance.PlayMusic(musicNameMenu);
-
     }
+
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape) && !SceneManager.GetSceneByName("OptionMenu").isLoaded)
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+
+        if (Input.GetKeyDown(KeyCode.Escape) && !IsMenuScene(SceneManager.GetActiveScene().name))
         {
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
-            PauseGame();
-            OpenOptionsMenu();
+            TogglePause();
         }
-
-        if (gameWon)
-        {
-            Debug.Log("Juego ganado");
-            Time.timeScale = 0f; // Pausa el juego al ganar
-            winCanvas.SetActive(true); // Muestra el canvas de victoria
-        }
-
-        // si el menu esta desactivado y el juego no ha comenzado
-        if (menuCanvas!=null && !menuCanvas.activeSelf && !gameStarted)
-        {
-            StartGame();
-        }
-
-
     }
+
     public void StartGame()
     {
+        // Limpiar suscriptores de eventos para evitar múltiples llamadas
+        ClearEventSubscribers();
+
+        ResetGameStates();
         gameStarted = true;
-        AudioManager.Instance.PlayMusic(musicNameStartGame); // Cambia la música al iniciar el juego
+        AudioManager.Instance.PlayMusic(musicNameStartGame);
+        OnGameStarted?.Invoke();
         Debug.Log("El juego ha comenzado");
+    }
 
-        winCanvas = FindObjectByName("WinCanvas");
-        menuCanvas = FindObjectByName("CanvasSelection");
-        gameOverCanvas= FindObjectByName("GameOverCanvas");
-
+    private void ClearEventSubscribers()
+    {
+        // Esto limpia todos los suscriptores de los eventos
+        OnGameOver = null;
+        OnGameWin = null;
+        OnGamePaused = null;
+        OnGameResumed = null;
+        OnGameStarted = null;
     }
 
     public void GameOver()
     {
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
-        if (isGameOver) return; // Evitar múltiples llamadas
+        if (isGameOver) return;
 
         Debug.Log("Juego perdido");
         isGameOver = true;
         Time.timeScale = 0f;
-        ShowGameOverMenu();
+        OnGameOver?.Invoke();
     }
 
     public void WinGame()
     {
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
-        if (gameWon) return; // Evita que se ejecute más de una vez
+        if (gameWon) return;
 
-        gameWon = true;
         Debug.Log("¡Has ganado el juego!");
-
-        Time.timeScale = 0;
-        // panelWinner.SetActive(true); 
+        gameWon = true;
+        Time.timeScale = 0f;
+        OnGameWin?.Invoke();
     }
 
-    // nameScene: Nombre de la escena
-    public void LoadSceneByName(string nameScene)
+    public void TogglePause()
     {
-        SceneManager.LoadScene(nameScene);
-    }
-
-    public void ReloadCurrentScene()
-    {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-    }
-
-    // Carga la siguiente escena por index
-    public void LoadNextScene()
-    {
-        int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
-        int nextSceneIndex = currentSceneIndex + 1;
-
-        // Verifica si hay una siguiente escena
-        if (nextSceneIndex < SceneManager.sceneCountInBuildSettings)
+        if (isPaused)
         {
-            SceneManager.LoadScene(nextSceneIndex);
+            ResumeGame();
         }
         else
         {
-            Debug.LogWarning("No hay m s escenas.  Has completado el juego!");
-            ReloadCurrentScene(); // Recargar la primera escena
+            PauseGame();
         }
     }
 
@@ -130,14 +150,44 @@ public class GameManager : MonoBehaviour
     {
         isPaused = true;
         Time.timeScale = 0f;
+        OnGamePaused?.Invoke();
+        OpenOptionsMenu();
     }
+
     public void ResumeGame()
     {
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
         isPaused = false;
         Time.timeScale = 1f;
+        OnGameResumed?.Invoke();
     }
+
+    public void LoadSceneByName(string nameScene)
+    {
+        SceneManager.LoadScene(nameScene);
+    }
+
+    public void ReloadCurrentScene()
+    {
+        ResetGameStates();
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    public void LoadNextScene()
+    {
+        int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
+        int nextSceneIndex = currentSceneIndex + 1;
+
+        if (nextSceneIndex < SceneManager.sceneCountInBuildSettings)
+        {
+            SceneManager.LoadScene(nextSceneIndex);
+        }
+        else
+        {
+            Debug.LogWarning("No hay más escenas. ¡Has completado el juego!");
+            ReloadCurrentScene();
+        }
+    }
+
     public void OpenOptionsMenu()
     {
         SceneManager.LoadScene("OptionMenu", LoadSceneMode.Additive);
@@ -148,33 +198,9 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene("CreditsMenu", LoadSceneMode.Additive);
     }
 
-    public void ShowGameOverMenu()
-    {
-        gameOverCanvas.SetActive(true);
-        Time.timeScale = 0f;
-    }
-
     public void GoToMainMenu()
     {
         Time.timeScale = 1f;
         SceneManager.LoadScene("MainMenu");
     }
-
-    private GameObject FindObjectByName(string name)
-    {
-        GameObject[] allObjects = Resources.FindObjectsOfTypeAll<GameObject>();
-
-        foreach (GameObject obj in allObjects)
-        {
-            if (obj.name == name)
-            {
-                return obj;
-            }
-        }
-
-        return null;
-    }
-
 }
-/*Forma de utilizar funciones en otros scripts, llamar escenas por nombres
-GameManager.instance.LoadSceneByName("Menu") */

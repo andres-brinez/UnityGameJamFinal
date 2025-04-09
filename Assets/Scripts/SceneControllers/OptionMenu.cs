@@ -224,5 +224,7 @@ public class OptionMenu : MonoBehaviour
         PlayerPrefs.Save();
         SceneManager.UnloadSceneAsync("OptionMenu");
         GameManager.Instance.ResumeGame();
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
     }
 }
